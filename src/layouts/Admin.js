@@ -84,13 +84,11 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-  let pageLoadingElem = null
-  if(mainStore.isFetching){
-    pageLoadingElem = <PageLoading />
-  }
   return (
     <div className={classes.wrapper}>
-      {pageLoadingElem}
+      <PageLoading
+        showModal={mainStore.isFetching}
+      />
       <Sidebar
         rtlActive={false}
         routes={routes}

@@ -34,6 +34,8 @@ import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
+import CompanyAdd from "views/Company/Add/Company-add"
+import CompanyEdit from "views/Company/Edit/Company-edit"
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -54,10 +56,17 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/company",
-    name: "Company List",
+    path: "/company-add",
+    name: "Company Add",
     icon: Business,
-    component: UserProfile,
+    component: CompanyAdd,
+    layout: "/admin",
+  },
+  {
+    path: "/company-edit",
+    name: "Company Edit",
+    icon: Business,
+    component: CompanyEdit,
     layout: "/admin",
   },
   {
