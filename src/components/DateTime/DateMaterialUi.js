@@ -23,7 +23,7 @@ function DateMaterialUi(props) {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <FormLabel style={{ color: "#AAAAAA" }}>{title}</FormLabel><br></br>
             <KeyboardDatePicker
-                format="MM/dd/yyyy"
+                format="dd/MM/yyyy"
                 label=""
                 value={currentTime}
                 onChange={setSelectedDate}

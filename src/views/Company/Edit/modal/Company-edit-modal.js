@@ -1,52 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { modalStyle } from 'utils/modalStyle.utils'
-import Icon from '@material-ui/core/Icon';
-import moment from "moment";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import DateMaterialUi from "components/DateTime/DateMaterialUi"
-import SelectBox from "components/Select/SelectBox"
-import CheckBox from "components/CheckBox/CheckBox"
-import RadioBox from "components/RadioBox/RadioBox"
-import InputFile from "components/Input/InputFile"
-import CardIcon from "components/Card/CardIcon.js";
-import TextField from '@material-ui/core/TextField';
-import AvatarForm from "components/Avatar/Avatar-form"
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
-// import { checkJWTTOKENAction } from "actions/main/main.action"
-import { itemSelectBoxs, itemRadioBoxs, getStatus } from "../data/Company-edit-data"
-import { GetCompanyByID, EditCompanyAction } from 'actions/company/company-edit.action'
-
+import Icon from '@material-ui/core/Icon';
+import { GetCompanyByID } from 'actions/company/company-edit.action'
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CompanyEditModalInfo from './Company-edit-modal-info'
+import CompanyEditModalDisable from './Company-edit-modal-disable'
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from '@material-ui/core/Button';
 import swal from 'sweetalert';
+import { modalStyle } from 'utils/modalStyle.utils'
+import moment from "moment";
+import { EditCompanyAction } from 'actions/company/company-edit.action'
+import { DisableCompanyAction } from 'actions/company/company-disable.action'
+import {EnableCompanyAction} from 'actions/company/company-enable.action'
 
 function CompanyEditModal(props) {
     const { showModal, setShowModal, valuesObj } = props
     const scroll = 'paper';
-    const classes = modalStyle();
     const dispatch = useDispatch();
     const history = useHistory();
     const Store = useSelector(state => state)
-    //----------Set default value
-    const dStart = moment();
-    const dEnd = moment().add(30, 'days');
+    const classes = modalStyle();
     //----------State
-    const [dateStart, setDateStart] = useState(dStart);
-    const [dateEnd, setDateEnd] = useState(dEnd);
-    const [promotion, setPromotion] = useState("");
-    const [checkCal, setCheckCal] = useState(false);
-    const [selectExceptDay, setSelectExceptDay] = useState("true");
-    const [image, setImage] = useState(null);
-    const [remark, setRemark] = useState("")
     const [companyInfo, setCompanyInfo] = useState({
         company_id: "",
         company_code: "",
@@ -62,10 +40,28 @@ function CompanyEditModal(props) {
         update_date: "",
         delete_by: "",
         delete_date: "",
-        calculate_enable: true,
+        calculate_enable: false,
         price_of_cardloss: "0",
         except_time_split_from_day: false
     })
+    //----------Set default value
+    const dStart = moment();
+    const dEnd = moment().add(30, 'days');
+    const [showFormInfo, setShowFormInfo] = useState(true);
+    const [showFormDisable, setShowFormDisable] = useState(false);
+    const [showFormEnable, setShowFormEnable] = useState(false);
+    const [headerTextModal, setHeaderTextModal] = useState("แก้ไขข้อมูลโครงการ");
+    //-------------------
+    const [checkCal, setCheckCal] = useState(false);
+    const [checkSecureEstampVisitor, setCheckSecureEstampVisitor] = useState(false);
+    const [checkSecureEstampBooking, setCheckSecureEstampBooking] = useState(false);
+    const [promotion, setPromotion] = useState("");
+    //----------State
+    const [dateStart, setDateStart] = useState(dStart);
+    const [dateEnd, setDateEnd] = useState(dEnd);
+    const [image, setImage] = useState(null);
+    const [remark, setRemark] = useState("")
+    const [selectExceptDay, setSelectExceptDay] = useState("true");
     //-----------------Form load
     useEffect(() => {
         loadEditForm();
@@ -75,7 +71,6 @@ function CompanyEditModal(props) {
         if (!authStore) {
             history.push("/login");
         } else {
-            // dispatch(checkJWTTOKENAction(history, Store));
             const values = {
                 company_id: parseInt(valuesObj)
             }
@@ -85,33 +80,17 @@ function CompanyEditModal(props) {
             } else {
                 const result = getData.result;
                 setCompanyInfo(result)
-                setDateStart(result.company_start_date)
-                setDateEnd(result.company_expire_date)
+                setCheckCal(result.calculate_enable);
+                setCheckSecureEstampVisitor(result.booking_estamp_verify);
+                setCheckSecureEstampBooking(result.visitor_estamp_verify);
                 setPromotion(result.company_promotion)
-                setCheckCal(result.calculate_enable)
+                setDateStart(result.company_start_date ? result.company_start_date : dStart)
+                setDateEnd(result.company_expire_date ? result.company_expire_date : dEnd)
                 setSelectExceptDay(result.except_time_split_from_day.toString())
             }
         }
     }
-    //-----------------Date Handing
-    function handdingDateStart(date) {
-        if (moment(date) > moment(dateEnd)) {
-            const newMoment = moment(date).add(1, 'days')
-            setDateStart(date)
-            setDateEnd(newMoment)
-        }
-        else
-            setDateStart(date)
-    }
-    function handdingDateEnd(date) {
-        if (moment(date) < moment(dateStart)) {
-            const newMoment = moment(date).subtract(1, 'days')
-            setDateStart(newMoment)
-            setDateEnd(date);
-        }
-        else
-            setDateEnd(date)
-    }
+
     //----------------On Create
     function onEditClick() {
         dispatch(EditCompanyAction(history, {
@@ -125,116 +104,148 @@ function CompanyEditModal(props) {
             calculate_enable: checkCal,
             except_time_split_from_day: selectExceptDay === "true" ? true : false,
             image,
+            remark,
+            booking_estamp_verify: checkSecureEstampVisitor,
+            visitor_estamp_verify: checkSecureEstampBooking
+        }, Store.loginReducer.result))
+    }
+    //---------------On Disable 
+    function onDisableClick() {
+        dispatch(DisableCompanyAction(history, {
+            company_id: companyInfo.company_id.toString(),
+            image,
             remark
         }, Store.loginReducer.result))
-        console.log(valuesObj)
-        console.log(image)
-
+    }
+    //---------------On Enable
+    function onEnableClick(){
+        dispatch(EnableCompanyAction(history, {
+            company_id: companyInfo.company_id.toString(),
+            image,
+            remark
+        }, Store.loginReducer.result))
     }
     function onCloseModal() {
         setShowModal(false);
     }
-    //------------Status Avatar
-    let statusAvatarElem = null;
-    if (companyInfo.status) {
-        statusAvatarElem = <GridContainer>
-            <GridItem>
-                <AvatarForm
-                    text={getStatus(companyInfo.status)}
-                    status={companyInfo.status}
-                />
-            </GridItem>
-        </GridContainer>
-
-    }
     //------------btn disable
     let btnDisableElem = null;
+    let btnEditSaveElem = null;
+    let btnEnableElem = null;
     if (companyInfo.status.toUpperCase() !== 'DISABLE') {
         btnDisableElem = <Button
             variant="contained"
             color="secondary"
             className={classes.button}
             endIcon={<Icon>remove_circle</Icon>}
+            onClick={() => { setShowFormInfo(false); setShowFormDisable(true); setHeaderTextModal("ระงับการใช้งานโครงการ"); }}
         >
             ระงับการใช้งาน
          </Button>
+        btnEditSaveElem = <Button onClick={onEditClick}
+            color="primary"
+            className={classes.btnSave}
+            endIcon={<Icon>save</Icon>}
+        >
+            แก้ไขข้อมูล
+         </Button>
+    } else {
+        btnEnableElem = <Button
+            className={classes.btnEnable}
+            endIcon={<Icon>history</Icon>}
+            onClick={() => { setShowFormInfo(false); setShowFormEnable(true); setHeaderTextModal("เปิดให้บริการโครงการใหม่อีกครั้ง"); }}
+        >
+            เปิดให้บริการใหม่
+     </Button>
     }
-    //-------------
-    let formCreateDataElem = null;
-    if (companyInfo.create_date) {
-        formCreateDataElem =
-            <div><GridContainer>
-                <GridItem xs={12} sm={6} md={6}>
-                    <TextField
-                        disabled
-                        label="วันที่สร้าง"
-                        defaultValue={companyInfo.create_date}
-                        variant="filled"
-                    />
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
-                    <TextField
-                        disabled
-                        label="ผู้สร้าง"
-                        defaultValue={companyInfo.create_by}
-                        variant="filled"
-                    />
-                </GridItem>
-            </GridContainer>
-                <br></br>
-            </div>
+    //----------------Show Form Info
+    let formInfoElem = null;
+    let formBottomElemInfo = null;
+    if (showFormInfo) {
+        formInfoElem = <CompanyEditModalInfo
+            companyInfo={companyInfo}
+            onCloseModal={onCloseModal}
+            setCompanyInfo={setCompanyInfo}
+            setShowFormInfo={setShowFormInfo}
+            checkCal={checkCal}
+            setCheckCal={setCheckCal}
+            checkSecureEstampVisitor={checkSecureEstampVisitor}
+            setCheckSecureEstampVisitor={setCheckSecureEstampVisitor}
+            checkSecureEstampBooking={checkSecureEstampBooking}
+            setCheckSecureEstampBooking={setCheckSecureEstampBooking}
+            promotion={promotion}
+            setPromotion={setPromotion}
+            setImage={setImage}
+            remark={remark}
+            setRemark={setRemark}
+            selectExceptDay={selectExceptDay}
+            setSelectExceptDay={setSelectExceptDay}
+            setDateStart={setDateStart}
+            setDateEnd={setDateEnd}
+            dateStart={dateStart}
+            dateEnd={dateEnd}
+        />
+        formBottomElemInfo = <DialogActions>
+            {btnEnableElem}
+            {btnDisableElem}
+            {btnEditSaveElem}
+            <Button onClick={onCloseModal}
+                color="primary"
+                className={classes.btnCancel}
+            >
+                ยกเลิก
+                </Button>
+        </DialogActions>
     }
-    //-------------When updated data
-    let formUpdateDataElem = null;
-    if (companyInfo.update_date) {
-        formUpdateDataElem =
-            <div>
-                <GridContainer>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <TextField
-                            disabled
-                            label="วันที่แก้ไขล่าสุด"
-                            defaultValue={companyInfo.update_date}
-                            variant="filled"
-                        />
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <TextField
-                            disabled
-                            label="ผู้แก้ไขล่าสุด"
-                            defaultValue={companyInfo.update_by}
-                            variant="filled"
-                        />
-                    </GridItem>
-                </GridContainer>
-                <br></br>
-            </div>
+    //--------------Show Form Disable
+    let formDisableElem = null;
+    let formBottomElemDisable = null;
+    if (showFormDisable) {
+        formDisableElem = <CompanyEditModalDisable
+            setImage={setImage}
+            remark={remark}
+            setRemark={setRemark}
+        />
+        formBottomElemDisable = <DialogActions>
+            <Button onClick={onDisableClick}
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                endIcon={<Icon>save</Icon>}
+            >
+                ระงับโครงการ
+            </Button>
+            <Button onClick={onCloseModal}
+                color="primary"
+                className={classes.btnCancel}
+            >
+                ยกเลิก
+            </Button>
+        </DialogActions>
     }
-    //-------------When Disable data
-    let formDisableDataElem = null;
-    if (companyInfo.delete_date) {
-        formDisableDataElem =
-            <div>
-                <GridContainer>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <TextField
-                            disabled
-                            label="วันที่ยกเลิกบริการล่าสุด"
-                            defaultValue={companyInfo.delete_date}
-                            variant="filled"
-                        />
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={6}>
-                        <TextField
-                            disabled
-                            label="ผู้ยกเลิกบริการล่าสุด"
-                            defaultValue={companyInfo.delete_by}
-                            variant="filled"
-                        />
-                    </GridItem>
-                </GridContainer>
-                <br></br>
-            </div>
+    //-------------Show Form Enable
+    let formEnableElem = null;
+    let formBottomElemEnable = null;
+    if (showFormEnable) {
+        formEnableElem = <CompanyEditModalDisable
+            setImage={setImage}
+            remark={remark}
+            setRemark={setRemark}
+        />
+        formBottomElemEnable = <DialogActions>
+            <Button onClick={onEnableClick}
+                className={classes.btnEnable}
+                endIcon={<Icon>save</Icon>}
+            >
+                เปิดให้บริการใหม่
+        </Button>
+            <Button onClick={onCloseModal}
+                color="primary"
+                className={classes.btnCancel}
+            >
+                ยกเลิก
+        </Button>
+        </DialogActions>
     }
     //-------------------------------------
     return (
@@ -244,169 +255,15 @@ function CompanyEditModal(props) {
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
         >
-            <DialogTitle className={classes.headModalEdit} id="scroll-dialog-title">แก้ไขข้อมูลโครงการ</DialogTitle>
-            <DialogContent dividers={scroll === 'paper'} className={classes.paper}>
-                <div>
-                    <GridContainer>
-
-                        <GridItem xs={12} sm={12} md={10}>
-                            {statusAvatarElem}
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={3}>
-                                    <CustomInput
-                                        labelText="รหัสโครงการ"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            maxLength: "15",
-                                            value: companyInfo.company_code,
-                                            onChange: event => setCompanyInfo({ ...companyInfo, company_code: event.target.value })
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <CustomInput
-                                        labelText="ชื่อโครงการ"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            maxLength: "255",
-                                            value: companyInfo.company_name,
-                                            onChange: event => setCompanyInfo({ ...companyInfo, company_name: event.target.value })
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <InputFile
-                                        title="เลือกรูปภาพหลักฐานที่ขอแก้ไขข้อมูล"
-                                        setValue={setImage}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <br></br>
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <DateMaterialUi
-                                        title="วันที่เริ่มเปิดให้บริการ"
-                                        selectedDate={dateStart}
-                                        setSelectedDate={handdingDateStart}
-                                    />
-                                </GridItem>
-                                <br></br>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <DateMaterialUi
-                                        title="วันทีหยุดให้บริการ"
-                                        selectedDate={dateEnd}
-                                        setSelectedDate={handdingDateEnd}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <br></br>
-                            {formCreateDataElem}
-                            {formUpdateDataElem}
-                            {formDisableDataElem}
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <SelectBox
-                                        title="เลือก Pro"
-                                        setValue={setPromotion}
-                                        value={promotion}
-                                        items={itemSelectBoxs}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <br></br>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <Icon>request_page</Icon>
-                                            </CardIcon>
-                                            <p >Calculate Setup</p>
-                                        </CardHeader>
-                                        <CardBody>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={12} md={12}>
-                                                    <CheckBox
-                                                        check={checkCal}
-                                                        setCheck={setCheckCal}
-                                                        title="เปิดระบบคิดเงิน"
-                                                    />
-                                                </GridItem>
-                                            </GridContainer>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={12} md={12}>
-                                                    <RadioBox
-                                                        title="เลือกการคำนวนเวลาจอดฟรี"
-                                                        value={selectExceptDay}
-                                                        setCheck={setSelectExceptDay}
-                                                        items={itemRadioBoxs}
-                                                    />
-                                                </GridItem>
-                                            </GridContainer>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={12} md={3}>
-                                                    <CustomInput
-                                                        labelText="ค่าปรับบัตรหาย"
-                                                        id="setup-cardlost"
-                                                        formControlProps={{
-                                                            fullWidth: false,
-                                                        }}
-                                                        inputProps={{
-                                                            maxLength: "5",
-                                                            value: companyInfo.price_of_cardloss,
-                                                            onChange: event => setCompanyInfo({ ...companyInfo, price_of_cardloss: event.target.value })
-                                                        }}
-                                                    />
-                                                </GridItem>
-                                            </GridContainer>
-                                        </CardBody>
-                                    </Card>
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <CustomInput
-                                        labelText="กรอกเหตุผลที่แก้ไขข้อมูล"
-                                        id="comp-name-th"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            maxLength: "255",
-                                            value: remark,
-                                            onChange: event => setRemark(event.target.value)
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                        </GridItem>
-                    </GridContainer>
-                </div>
+            <DialogTitle className={classes.headModalEdit} id="scroll-dialog-title">{headerTextModal}</DialogTitle>
+            <DialogContent>
+                {formInfoElem}
+                {formDisableElem}
+                {formEnableElem}
             </DialogContent>
-            <DialogActions>
-                {btnDisableElem}
-                <Button onClick={onEditClick}
-                    color="primary"
-                    className={classes.btnSave}
-                    endIcon={<Icon>save</Icon>}
-                >
-                    แก้ไข
-                </Button>
-                <Button onClick={onCloseModal}
-                    color="primary"
-                    className={classes.btnCancel}
-                >
-                    ยกเลิก
-                </Button>
-            </DialogActions>
+            {formBottomElemInfo}
+            {formBottomElemDisable}
+            {formBottomElemEnable}
         </Dialog>
     )
 }

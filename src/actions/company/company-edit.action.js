@@ -48,7 +48,6 @@ export const GetCompanyAllAction = (history, credential, authStore) => {
     return async dispatch => {
         dispatch(setFetching());
         dispatch(setGetCompanyAllFetching());
-        console.log(credential)
         const urlClient = `${MAIN_URL}${GET_COMPANY_ALL_API}`
         const valuesObj = { ...credential }
         const result = await httpClientGetMethodWithPost({ urlClient, valuesObj, authStore })

@@ -38,6 +38,8 @@ function CompanyAdd() {
     const [dateEnd, setDateEnd] = useState(dEnd);
     const [promotion, setPromotion] = useState("");
     const [checkCal, setCheckCal] = useState(false);
+    const [checkSecureEstampVisitor, setCheckSecureEstampVisitor] = useState(false);
+    const [checkSecureEstampBooking, setCheckSecureEstampBooking] = useState(false);
     const [selectExceptDay, setSelectExceptDay] = useState("true");
     const [image, setImage] = useState(null);
     const [companyInfo, setCompanyInfo] = useState({
@@ -87,6 +89,8 @@ function CompanyAdd() {
             company_promotion: promotion,
             calculate_enable: checkCal,
             except_time_split_from_day: selectExceptDay === "true" ? true : false,
+            booking_estamp_verify: checkSecureEstampVisitor,
+            visitor_estamp_verify: checkSecureEstampBooking,
             image
         }, Store.loginReducer.result))
     }
@@ -223,48 +227,32 @@ function CompanyAdd() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <Icon>request_page</Icon>
+                                        <CardHeader color="info" stats icon>
+                                            <CardIcon color="info">
+                                                <Icon>admin_panel_settings</Icon>
                                             </CardIcon>
-                                            <p className={classes.cardCategory}>Calculate Setup</p>
+                                            <p className={classes.cardCategory}>Security Setup</p>
                                         </CardHeader>
                                         <CardBody>
                                             <GridContainer>
                                                 <GridItem xs={12} sm={12} md={12}>
                                                     <CheckBox
-                                                        check={checkCal}
-                                                        setCheck={setCheckCal}
-                                                        title="เปิดระบบคิดเงิน"
+                                                        check={checkSecureEstampVisitor}
+                                                        setCheck={setCheckSecureEstampVisitor}
+                                                        title="เปิดระบบตรวจสอบ E-Stamp ก่อนออกจากโครงการ (Visitor ทั่วไป)"
                                                     />
                                                 </GridItem>
                                             </GridContainer>
                                             <GridContainer>
                                                 <GridItem xs={12} sm={12} md={12}>
-                                                    <RadioBox
-                                                        title="เลือกการคำนวนเวลาจอดฟรี"
-                                                        value={selectExceptDay}
-                                                        setCheck={setSelectExceptDay}
-                                                        items={itemRadioBoxs}
+                                                    <CheckBox
+                                                        check={checkSecureEstampBooking}
+                                                        setCheck={setCheckSecureEstampBooking}
+                                                        title="เปิดระบบตรวจสอบ E-Stamp ก่อนออกจากโครงการ (Booking หรือจากการจอง)"
                                                     />
                                                 </GridItem>
                                             </GridContainer>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={12} md={3}>
-                                                    <CustomInput
-                                                        labelText="ค่าปรับบัตรหาย"
-                                                        id="setup-cardlost"
-                                                        formControlProps={{
-                                                            fullWidth: false,
-                                                        }}
-                                                        inputProps={{
-                                                            maxLength: "5",
-                                                            value: companyInfo.price_of_cardloss,
-                                                            onChange: event => setCompanyInfo({ ...companyInfo, price_of_cardloss: event.target.value })
-                                                        }}
-                                                    />
-                                                </GridItem>
-                                            </GridContainer>
+                                            <p style={{ color: 'red' }}>***เป็นการตรวจสอบว่าผู้มาเยือนได้ถูกประทับตรา (E-Stamp) จากลูกบ้านที่มาติดต่อ หรือจากฝ่ายนิติบุคคลแล้ว หรือไม่</p>
                                         </CardBody>
                                     </Card>
                                 </GridItem>
