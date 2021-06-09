@@ -41,6 +41,7 @@ export default function Sidebar(props) {
             [" " + classes[color]]: true,
           });
         } else {
+         
           listItemClasses = classNames({
             [" " + classes[color]]: activeRoute(prop.layout + prop.path),
           });

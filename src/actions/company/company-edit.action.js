@@ -20,7 +20,7 @@ import {
     MESSAGE_REMARKNOTFOUND
 } from 'constants/message.constant'
 import { MAIN_URL, GET_COMPANY_ALL_API, GET_COMPANY_BYID_API, EDIT_COMPANY_INFO_API } from 'constants/api-route'
-import { httpClientGetMethodWithPost,httpClientPOSTMethodFormData } from 'utils/httpClient.utils'
+import { httpClientGetMethodWithPost, httpClientPOSTMethodFormData } from 'utils/httpClient.utils'
 
 export const setGetCompanyAllFetching = () => ({
     type: HTTP_GET_COMPANY_ALL_FETCHING
@@ -51,13 +51,15 @@ export const GetCompanyAllAction = (history, credential, authStore) => {
         const urlClient = `${MAIN_URL}${GET_COMPANY_ALL_API}`
         const valuesObj = { ...credential }
         const result = await httpClientGetMethodWithPost({ urlClient, valuesObj, authStore })
-        console.log(result)
         if (result.error) {
             dispatch(setFailed());
             dispatch(setGetCompanyFailed());
             swal("Warning!", result.message, "warning");
         } else {
-            dispatch(setGetCompanyAllSuccess(result.result));
+            if (result.result)
+                dispatch(setGetCompanyAllSuccess(result.result));
+            else
+                dispatch(setGetCompanyAllSuccess([]));
             dispatch(setSuccess());
         }
     }
@@ -112,7 +114,7 @@ function editCompanyMiddleware(valuesObj) {
     } else if (!valuesObj.image) {
         swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
         return false;
-    } else if(!valuesObj.remark){
+    } else if (!valuesObj.remark) {
         swal("Warning!", MESSAGE_REMARKNOTFOUND, "warning");
         return false;
     }

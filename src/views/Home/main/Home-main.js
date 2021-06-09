@@ -1,4 +1,4 @@
-import { styles } from "../Add/Company-style"
+import { styles } from "./Home-main-style"
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from 'react-redux';
 import GridItem from "components/Grid/GridItem.js";
@@ -25,31 +25,31 @@ import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
 import { GetCompanyAllAction } from "actions/company/company-edit.action"
-import { headerTable } from './data/Company-edit-data'
+import { setSelectCompanySuccess,setClearSelectCompany } from "actions/home/home-import-excel.action"
+import { headerTable } from '../data/Home-data'
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
-import { editCompantStyle } from './Company-edit-style'
-import CompanyEditModal from './modal/Company-edit-modal'
+import { modalStyle } from 'utils/modalStyle.utils'
+import { homeCompantStyle } from './Home-main-style'
 
 const useStyles = makeStyles(styles);
-const useStyles2 = makeStyles(editCompantStyle);
-function CompanyEdit() {
+const useStyles2 = makeStyles(homeCompantStyle);
+function HomeMain() {
     const classes = useStyles();
     const classes2 = useStyles2();
+    const classesModal = modalStyle();
     const Store = useSelector(store => store);
     const dispatch = useDispatch();
     const history = useHistory();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const emptyRows = calEmptyRows(Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result : 0);
-    const [showModal, setShowModal] = useState(false);
-    const [selectRow, setSelectRow] = useState({ company_id: "" })
     //---------------------on load
     useEffect(() => {
-        loadCompanyEditForm();
+        loadHomeMainForm();
     }, []);
-    async function loadCompanyEditForm(textSearch) {
+    async function loadHomeMainForm(textSearch) {
         const authStore = Store.loginReducer.result;
         if (!authStore) {
             history.push("/login");
@@ -57,13 +57,14 @@ function CompanyEdit() {
             const valuesObj = {
                 company_code_or_name: textSearch
             }
+            dispatch(setClearSelectCompany());
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetCompanyAllAction(history, valuesObj, authStore));
         }
     }
     //---------------On Search Click
     function onSearchClick(e) {
-        loadCompanyEditForm(e);
+        loadHomeMainForm(e);
     }
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -88,26 +89,21 @@ function CompanyEdit() {
     //--------------Show Modal Edit
     function onShowModal(event) {
         const company_id = event.target.getAttribute("company_id")
-        setSelectRow(company_id);
-        company_id && setShowModal(true);
+        const company_name = event.target.getAttribute("company_name")
+        if (company_id) {
+            dispatch(setSelectCompanySuccess({company_id,company_name}))
+            history.push("/admin/home-import");
+        }
     }
     //--------------Modal edit
-    let modalEditElem = null;
-    if (showModal) {
-        modalEditElem = <CompanyEditModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            valuesObj={selectRow}
-        />
-    }
+
     //----------------------------------------------------
     return (
         <div>
-            {modalEditElem}
             <GridContainer>
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
-                        <CardHeader color="primary">
+                        <CardHeader color="success">
                             <h4 className={classes.cardTitleWhite}>ตารางโครงการในระบบ</h4>
                             <p className={classes.cardCategoryWhite}>Company List Table</p>
                         </CardHeader>
@@ -147,15 +143,15 @@ function CompanyEdit() {
                                                 <TableCell style={{ width: 80 }} align="left">
                                                     <div className={classes2.tableRowBtn}>
                                                         <Button
-                                                            variant="contained"
                                                             color="primary"
                                                             size="small"
-                                                            className={classes.button}
-                                                            endIcon={<Icon company_id={row.company_id}>create</Icon>}
+                                                            className={classesModal.btnSelect}
+                                                            endIcon={<Icon company_id={row.company_id} company_name={row.company_name}>pin_end</Icon>}
                                                             company_id={row.company_id}
+                                                            company_name={row.company_name}
                                                             onClick={onShowModal}
                                                         >
-                                                            <span company_id={row.company_id}>แก้ไข</span>
+                                                            <span company_id={row.company_id} company_name={row.company_name}>เลือก</span>
                                                         </Button><br></br>
 
                                                     </div>
@@ -211,10 +207,11 @@ function CompanyEdit() {
 }
 
 
-const mapStateToProps = ({ mainReducer, companyGetAllReducer }) => ({ mainReducer, companyGetAllReducer })
+const mapStateToProps = ({ mainReducer, companyGetAllReducer, homeImportExcelReducer }) => ({ mainReducer, companyGetAllReducer, homeImportExcelReducer })
 
 const mapDispatchToProps = {
     GetCompanyAllAction,
+    setSelectCompanySuccess,
     checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeMain);

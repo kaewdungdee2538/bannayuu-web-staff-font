@@ -25,6 +25,7 @@ import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
+import HomeWork from "@material-ui/icons/HomeWork"
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -34,8 +35,9 @@ import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
-import CompanyAdd from "views/Company/Add/Company-add"
-import CompanyEdit from "views/Company/Edit/Company-edit"
+import CompanyAdd from "views/Company/Add/Company-add";
+import CompanyEdit from "views/Company/Edit/Company-edit";
+import HomeMain from "views/Home/main/Home-main";
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -67,6 +69,13 @@ const dashboardRoutes = [
     name: "Company Edit",
     icon: Business,
     component: CompanyEdit,
+    layout: "/admin",
+  },
+  {
+    path: "/home-main",
+    name: "Home Import From Excel",
+    icon: HomeWork,
+    component: HomeMain,
     layout: "/admin",
   },
   {

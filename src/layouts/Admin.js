@@ -12,6 +12,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 // import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import secondRoutes from "secondroutes.js"
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -24,11 +25,24 @@ import logo from "assets/img/logo-big.svg";
 import PageLoading from "views/ErrorPage/PageLoading"
 import { useSelector } from 'react-redux'
 
+
 let ps;
 
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
+      if (prop.layout === "/admin") {
+        return (
+          <Route
+            path={prop.layout + prop.path}
+            component={prop.component}
+            key={key}
+          />
+        );
+      }
+      return null;
+    })}
+    {secondRoutes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
           <Route

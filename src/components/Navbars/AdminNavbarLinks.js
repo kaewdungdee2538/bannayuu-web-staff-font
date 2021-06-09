@@ -21,7 +21,7 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { connect } from 'react-redux'
-import {setLoginClearStore} from '../../actions/login/login.action'
+import { setLoginClearStore } from '../../actions/login/login.action'
 import { logoutAction } from '../../actions/logout/logout.action'
 import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
@@ -52,10 +52,12 @@ function AdminNavbarLinks() {
     }
   };
   const handleCloseProfile = () => {
-    // setOpenProfile(null);
+    setOpenProfile(null);
+  };
+  const onLogOutClick = () => {
     dispatch(logoutAction(history));
     dispatch(setLoginClearStore());
-  };
+  }
   return (
     <div>
       <div className={classes.searchWrapper}>
@@ -200,17 +202,19 @@ function AdminNavbarLinks() {
               }}
             >
               <Paper>
-                <ClickAwayListener onClickAway={handleCloseProfile}>
+                <ClickAwayListener
+                  onClickAway={handleCloseProfile}
+                >
                   <MenuList role="menu">
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      // onClick={handleCloseProfile}
                       className={classes.dropdownItem}
                     >
                       Profile
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={onLogOutClick}
                       className={classes.dropdownItem}
                     >
                       Logout
