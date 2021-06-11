@@ -23,13 +23,16 @@ const stypeLogoHeader = {
 const useStyles = makeStyles(styles);
 
 export default function Sidebar(props) {
+  console.log('render sidebar')
   const classes = useStyles();
   let location = useLocation();
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
+    console.log(routeName);
     return location.pathname === routeName;
   }
-  const { color, logo, image, logoText, routes } = props;
+  const { color, logo, image, logoText, routes,secondRoutes } = props;
+  var newRoute = [...routes,...secondRoutes]
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
@@ -41,7 +44,6 @@ export default function Sidebar(props) {
             [" " + classes[color]]: true,
           });
         } else {
-         
           listItemClasses = classNames({
             [" " + classes[color]]: activeRoute(prop.layout + prop.path),
           });

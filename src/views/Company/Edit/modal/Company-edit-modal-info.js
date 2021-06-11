@@ -155,11 +155,10 @@ function CompanyEditModalInfo(props) {
         <DialogContent dividers={scroll === 'paper'} >
             <div>
                 <GridContainer>
-
-                    <GridItem xs={12} sm={12} md={10}>
+                    <GridItem xs={12} sm={12} md={12}>
                         {statusAvatarElem}
                         <GridContainer>
-                            <GridItem xs={12} sm={12} md={3}>
+                            <GridItem xs={12} sm={12} md={5}>
                                 <CustomInput
                                     labelText="รหัสโครงการ"
                                     formControlProps={{
@@ -189,8 +188,9 @@ function CompanyEditModalInfo(props) {
                             </GridItem>
                         </GridContainer>
                         <GridContainer>
-                            <GridItem xs={12} sm={12} md={6}>
+                            <GridItem xs={12} sm={12} md={12}>
                                 <InputFile
+
                                     title="เลือกรูปภาพหลักฐานที่ขอแก้ไขข้อมูล"
                                     setValue={setImage}
                                 />
@@ -259,7 +259,7 @@ function CompanyEditModalInfo(props) {
                                             </GridItem>
                                         </GridContainer>
                                         <GridContainer>
-                                            <GridItem xs={12} sm={12} md={3}>
+                                            <GridItem xs={12} sm={12} md={5}>
                                                 <CustomInput
                                                     labelText="ค่าปรับบัตรหาย"
                                                     id="setup-cardlost"

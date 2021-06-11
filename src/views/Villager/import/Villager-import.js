@@ -13,11 +13,11 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
-import { ImportExcelHomeAction } from "actions/home/home-import-excel.action"
-import { setClearHomeAll } from "actions/home/home-get-all.action"
-import { styles } from '../main/Home-main-style'
+import { ImportExcelVillagerAction } from "actions/villager/villager-import-excel.action"
+import { setClearVillagerAll } from "actions/villager/villager-get-all.action"
+import { styles } from '../main/Villager-main-style'
 import { modalStyle } from 'utils/modalStyle.utils'
-import { useStylesExcelArea } from './Home-import-style'
+import { useStylesExcelArea } from './Villager-import-style'
 import ExcelFormMaterialUi from 'components/Excel/ExcelFormMaterialUi'
 import swal from 'sweetalert';
 import {
@@ -28,7 +28,7 @@ import Spreadsheet from "react-spreadsheet";
 
 const useStyles = makeStyles(styles);
 
-function HomeImportData() {
+function VillagerImportData() {
     const classes = useStyles();
     const classesModal = modalStyle();
     const classesExcel = useStylesExcelArea();
@@ -39,18 +39,18 @@ function HomeImportData() {
 
     //---------------------on load
     useEffect(() => {
-        loadHomeImportExcelForm();
+        loadVillagerImportExcelForm();
     }, []);
-    async function loadHomeImportExcelForm() {
+    async function loadVillagerImportExcelForm() {
         const authStore = Store.loginReducer.result;
         if (!authStore) {
             history.push("/login");
         } else {
-            if (!Store.homeImportExcelReducer.result) {
-                history.push("/admin/home-main");
+            if (!Store.villagerImportExcelReducer.result) {
+                history.push("/admin/villager-main");
             } else {
+                dispatch(setClearVillagerAll());
                 dispatch(checkJWTTOKENAction(history, Store));
-                dispatch(setClearHomeAll());
             }
         }
     }
@@ -66,7 +66,7 @@ function HomeImportData() {
         if (checkRow()) {
             if (checkColum()) {
                 uploadData();
-            } else swal("Warning!", `${MESSAGE_EXCELCOLUMN_NOTCOMPLETE} จำนวนคอลัมน์จะต้องมี 2-4 เท่านั้น`, "warning");
+            } else swal("Warning!", `${MESSAGE_EXCELCOLUMN_NOTCOMPLETE} จำนวนคอลัมน์จะต้องมี 4-6 เท่านั้น`, "warning");
         } else swal("Warning!", MESSAGE_EXCELROW_NOTFOUND, "warning");
     }
     function checkRow() {
@@ -76,24 +76,24 @@ function HomeImportData() {
     }
     function checkColum() {
         const filterColumns = excelItems.find(item => {
-            return item.length > 4 || item.length < 2
+            return item.length > 6 || item.length < 4
         });
         if (filterColumns) return false;
         return true;
     }
     function uploadData() {
-        const homeImportReducer = Store.homeImportExcelReducer.result;
+        const villagerImportReducer = Store.villagerImportExcelReducer.result;
         let itemFromExcel = [...excelItems];
         itemFromExcel.shift();
         const valueObj = {
-            company_id: homeImportReducer.company_id,
+            company_id: villagerImportReducer.company_id,
             data: itemFromExcel
         }
-        dispatch(ImportExcelHomeAction(history, valueObj, Store.loginReducer.result));
+        dispatch(ImportExcelVillagerAction(history, valueObj, Store.loginReducer.result));
     }
     //----------------On go to Home list 
-    function onGotoHomeListClick() {
-        history.push('/admin/home-list')
+    function onGotoVillagerListClick() {
+        history.push('/admin/villager-list')
     }
     //----------------------------------------------------
     return (
@@ -101,9 +101,9 @@ function HomeImportData() {
             <GridContainer>
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
-                        <CardHeader color="success">
-                            <h4 className={classes.cardTitleWhite}>Import Data From Excel For Upload To Home</h4>
-                            <p className={classes.cardCategoryWhite}>Import Data From Excel For Upload To Home</p>
+                        <CardHeader style={{ background: "linear-gradient(60deg, #3f51b5, #283593)" }} color="success">
+                            <h4 className={classes.cardTitleWhite}>Import Data From Excel For Upload To Villager</h4>
+                            <p className={classes.cardCategoryWhite}>Import Data From Excel For Upload To Villager</p>
                         </CardHeader>
                         <CardBody>
                             <p style={{ color: "#1a237e" }}>เลือกไฟล์ Excel ที่นามสกุลไฟล์เป็น .xlsx เท่านั้น</p>
@@ -117,9 +117,9 @@ function HomeImportData() {
                                     size="small"
                                     className={classesModal.btnNextPage}
                                     endIcon={<Icon style={{ fontSize: "25px" }}>keyboard_tab</Icon>}
-                                    onClick={onGotoHomeListClick}
+                                    onClick={onGotoVillagerListClick}
                                 >
-                                    <span>ตรวจสอบข้อมูลบ้าน</span>
+                                    <span>ตรวจสอบข้อมูลลูกบ้าน</span>
                                 </Button>
                             </div>
                             <br></br>
@@ -149,11 +149,10 @@ function HomeImportData() {
 }
 
 
-const mapStateToProps = ({ mainReducer, homeImportExcelReducer, homeGetAllReducer }) => ({ mainReducer, homeImportExcelReducer, homeGetAllReducer })
+const mapStateToProps = ({ mainReducer, villagerGetAllReducer }) => ({ mainReducer, villagerGetAllReducer })
 
 const mapDispatchToProps = {
-    ImportExcelHomeAction,
-    setClearHomeAll,
+    setClearVillagerAll,
     checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(HomeImportData);
+export default connect(mapStateToProps, mapDispatchToProps)(VillagerImportData);

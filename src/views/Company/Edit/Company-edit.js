@@ -108,7 +108,7 @@ function CompanyEdit() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader color="primary">
-                            <h4 className={classes.cardTitleWhite}>ตารางโครงการในระบบ</h4>
+                            <h4 className={classes.cardTitleWhite}>โครงการในระบบ (แก้ไขข้อมูลโครงการ)</h4>
                             <p className={classes.cardCategoryWhite}>Company List Table</p>
                         </CardHeader>
 

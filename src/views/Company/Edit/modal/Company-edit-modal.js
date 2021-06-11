@@ -19,6 +19,7 @@ import {EnableCompanyAction} from 'actions/company/company-enable.action'
 
 function CompanyEditModal(props) {
     const { showModal, setShowModal, valuesObj } = props
+    console.log(valuesObj)
     const scroll = 'paper';
     const dispatch = useDispatch();
     const history = useHistory();
@@ -97,7 +98,7 @@ function CompanyEditModal(props) {
             company_id: companyInfo.company_id.toString(),
             company_code: companyInfo.company_code,
             company_name: companyInfo.company_name,
-            price_of_cardloss: companyInfo.price_of_cardloss,
+            price_of_cardloss: companyInfo.price_of_cardloss.toString(),
             company_start_date: moment(dateStart).set({ hour: 0, minute: 0, second: 0 }).format("yyyy-MM-DD HH:mm:ss"),
             company_expire_date: moment(dateEnd).set({ hour: 0, minute: 0, second: 0 }).format("yyyy-MM-DD HH:mm:ss"),
             company_promotion: promotion,

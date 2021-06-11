@@ -25,7 +25,8 @@ import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
 import { GetCompanyAllAction } from "actions/company/company-edit.action"
-import { setSelectCompanySuccess,setClearSelectCompany } from "actions/home/home-import-excel.action"
+import { setSelectCompanySuccess, setClearSelectCompany } from "actions/home/home-import-excel.action"
+import { setClearHomeAll } from "actions/home/home-get-all.action"
 import { headerTable } from '../data/Home-data'
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -58,6 +59,7 @@ function HomeMain() {
                 company_code_or_name: textSearch
             }
             dispatch(setClearSelectCompany());
+            dispatch(setClearHomeAll());
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetCompanyAllAction(history, valuesObj, authStore));
         }
@@ -91,7 +93,7 @@ function HomeMain() {
         const company_id = event.target.getAttribute("company_id")
         const company_name = event.target.getAttribute("company_name")
         if (company_id) {
-            dispatch(setSelectCompanySuccess({company_id,company_name}))
+            dispatch(setSelectCompanySuccess({ company_id, company_name }))
             history.push("/admin/home-import");
         }
     }
@@ -104,7 +106,7 @@ function HomeMain() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader color="success">
-                            <h4 className={classes.cardTitleWhite}>ตารางโครงการในระบบ</h4>
+                            <h4 className={classes.cardTitleWhite}>โครงการในระบบ (Import Home From Excel)</h4>
                             <p className={classes.cardCategoryWhite}>Company List Table</p>
                         </CardHeader>
 
@@ -207,9 +209,10 @@ function HomeMain() {
 }
 
 
-const mapStateToProps = ({ mainReducer, companyGetAllReducer, homeImportExcelReducer }) => ({ mainReducer, companyGetAllReducer, homeImportExcelReducer })
+const mapStateToProps = ({ mainReducer, companyGetAllReducer, homeImportExcelReducer, homeGetAllReducer }) => ({ mainReducer, companyGetAllReducer, homeImportExcelReducer, homeGetAllReducer })
 
 const mapDispatchToProps = {
+    setClearHomeAll,
     GetCompanyAllAction,
     setSelectCompanySuccess,
     checkJWTTOKENAction

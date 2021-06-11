@@ -26,6 +26,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import HomeWork from "@material-ui/icons/HomeWork"
+import Group from "@material-ui/icons/Group"
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -38,6 +39,7 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import CompanyAdd from "views/Company/Add/Company-add";
 import CompanyEdit from "views/Company/Edit/Company-edit";
 import HomeMain from "views/Home/main/Home-main";
+import VillagerMain from "views/Villager/main/Villager-main"
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -76,6 +78,13 @@ const dashboardRoutes = [
     name: "Home Import From Excel",
     icon: HomeWork,
     component: HomeMain,
+    layout: "/admin",
+  },
+  {
+    path: "/villager-main",
+    name: "Villager Import From Excel",
+    icon: Group,
+    component: VillagerMain,
     layout: "/admin",
   },
   {

@@ -1,6 +1,6 @@
 // import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
-import { deepOrange, green, grey, red } from '@material-ui/core/colors';
+import { deepOrange, green, grey, red,yellow } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme) => ({
     square: {
         color: theme.palette.getContrastText(deepOrange[500]),
@@ -29,6 +29,14 @@ const useStyles = makeStyles((theme) => ({
         padding: '5px 15px',
         color: '#fff',
         backgroundColor: grey[500]
+    }, notopenStatus: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '4px',
+        padding: '5px 15px',
+        color: '#000',
+        backgroundColor: yellow[500]
     }
 }));
 
@@ -41,6 +49,8 @@ function AvatarForm(props) {
                 return classes.normalStatus;
             case "EXPIRE":
                 return classes.expireStatus;
+            case "NOTOPEN":
+                return classes.notopenStatus;
             default:
                 return classes.disableStatus;
         }

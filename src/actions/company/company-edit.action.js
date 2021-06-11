@@ -99,6 +99,7 @@ export const EditCompanyAction = (history, credential, authStore) => {
 }
 
 function editCompanyMiddleware(valuesObj) {
+    console.log(valuesObj)
     if (!valuesObj.company_code) {
         swal("Warning!", MESSAGE_COMPANYCODE_NOTFOUND, "warning");
         return false;

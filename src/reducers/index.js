@@ -4,10 +4,16 @@ import logoutReducer from 'reducers/logout/logout.reducer'
 import mainReducer from 'reducers/main/main.reducer'
 import companyGetAllReducer from 'reducers/company/company-get-all.reducer'
 import homeImportExcelReducer from 'reducers/home/home-import-excel.reducer'
+import homeGetAllReducer from 'reducers/home/home-get-all.reducer'
+import villagerImportExcelReducer from 'reducers/villager/villager-import-excel.reducer'
+import villagerGetAllReducer from 'reducers/villager/villager-get-all.reducer'
 export default combineReducers({
     loginReducer,
     logoutReducer,
     mainReducer,
     companyGetAllReducer,
-    homeImportExcelReducer
+    homeImportExcelReducer,
+    homeGetAllReducer,
+    villagerImportExcelReducer,
+    villagerGetAllReducer,
 })

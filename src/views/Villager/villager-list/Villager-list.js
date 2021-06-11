@@ -21,8 +21,8 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
-import { GetHomeAllAction } from "actions/home/home-get-all.action"
-import { headerHomeListTable } from '../data/Home-data'
+import { GetVillagerAllAction } from "actions/villager/villager-get-all.action"
+import { headerVillagerListTable } from '../data/Villager-data'
 // import Button from '@material-ui/core/Button';
 // import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
@@ -30,11 +30,11 @@ import ButtonSearch from 'components/Button/ButtonSearch'
 import {
     // homeCompantStyle,
     styles
-} from '../main/Home-main-style'
+} from '../main/Villager-main-style'
 
 const useStyles = makeStyles(styles);
 // const useStyles2 = makeStyles(homeCompantStyle);
-function HomeList() {
+function VillagerList() {
     const classes = useStyles();
     // const classes2 = useStyles2();
     // const classesModal = modalStyle();
@@ -43,32 +43,32 @@ function HomeList() {
     const history = useHistory();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const emptyRows = calEmptyRows(Store.homeGetAllReducer.result ? Store.homeGetAllReducer.result : 0);
+    const emptyRows = calEmptyRows(Store.villagerGetAllReducer.result ? Store.villagerGetAllReducer.result : 0);
     //---------------------on load
     useEffect(() => {
-        loadHomeMainForm();
+        loadVillagerMainForm();
     }, []);
-    async function loadHomeMainForm(textSearch) {
+    async function loadVillagerMainForm(textSearch) {
         const authStore = Store.loginReducer.result;
         if (!authStore) {
             history.push("/login");
         } else {
-            if (!Store.homeImportExcelReducer.result) {
-                history.push("/admin/home-main");
+            if (!Store.villagerImportExcelReducer.result) {
+                history.push("/admin/villager-main");
             } else {
-                const result = Store.homeImportExcelReducer.result
+                const result = Store.villagerImportExcelReducer.result
                 const valuesObj = {
                     company_id: result.company_id,
                     home_address: textSearch
                 }
                 dispatch(checkJWTTOKENAction(history, Store));
-                dispatch(GetHomeAllAction(history, valuesObj, authStore));
+                dispatch(GetVillagerAllAction(history, valuesObj, authStore));
             }
         }
     }
     //---------------On Search Click
     function onSearchClick(e) {
-        loadHomeMainForm(e);
+        loadVillagerMainForm(e);
     }
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -97,9 +97,9 @@ function HomeList() {
             <GridContainer>
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
-                        <CardHeader color="success">
-                            <h4 className={classes.cardTitleWhite}>ตารางบ้านเลขที่ของโครงการ {Store.homeImportExcelReducer.result ? Store.homeImportExcelReducer.result.company_name : ""}</h4>
-                            <p className={classes.cardCategoryWhite}>Home List Table</p>
+                        <CardHeader style={{ background: "linear-gradient(60deg, #3f51b5, #283593)" }} color="success">
+                            <h4 className={classes.cardTitleWhite}>ตารางข้อมูลลูกบ้านของโครงการ {Store.villagerGetAllReducer.result ? Store.villagerGetAllReducer.result.company_name : ""}</h4>
+                            <p className={classes.cardCategoryWhite}>Villager List Table</p>
                         </CardHeader>
 
                         <CardBody>
@@ -112,28 +112,40 @@ function HomeList() {
                                 <Table className={classes.table} aria-label="custom pagination table">
                                     <TableHead>
                                         <TableRow>
+                                            <TableCell style={{ width: 180, ...styleTableHeader }} align="left">
+                                                {headerVillagerListTable.villager_code}
+                                            </TableCell>
                                             <TableCell style={{ width: 160, ...styleTableHeader }} align="left">
-                                                {headerHomeListTable.home_code}
+                                                {headerVillagerListTable.home_address}
                                             </TableCell>
                                             <TableCell style={{ ...styleTableHeader }}>
-                                                {headerHomeListTable.home_address}
+                                                {headerVillagerListTable.full_name}
+                                            </TableCell>
+                                            <TableCell style={{ width: 160, ...styleTableHeader }} align="left">
+                                                {headerVillagerListTable.tel_number}
                                             </TableCell>
                                             <TableCell style={{ width: 120, ...styleTableHeader }} align="left">
-                                                {headerHomeListTable.status}
+                                                {headerVillagerListTable.status}
                                             </TableCell>
-                                        </TableRow>
+                                        </TableRow>   
                                     </TableHead>
                                     <TableBody>
                                         {(rowsPerPage > 0
-                                            ? Store.homeGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : Store.homeGetAllReducer.result
+                                            ? Store.villagerGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            : Store.villagerGetAllReducer.result
                                         ).map((row) => (
-                                            <TableRow key={row.home_id ? row.home_id : '0'}>
+                                            <TableRow key={row.villager_id ? row.villager_id : '0'}>
+                                                <TableCell style={{ width: 180 }} align="left">
+                                                    {row.villager_code ? row.villager_code : ''}
+                                                </TableCell>
                                                 <TableCell style={{ width: 160 }} align="left">
-                                                    {row.home_code ? row.home_code : ''}
+                                                    {row.home_address ? row.home_address : ''}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {row.home_address ? row.home_address : ''}
+                                                    {row.home_address ? `${row.first_name} ${row.last_name}` : ''}
+                                                </TableCell>
+                                                <TableCell style={{ width: 160 }} align="left">
+                                                    {row.tel_number ? row.tel_number : ''}
                                                 </TableCell>
                                                 <TableCell style={{ width: 120 }} align="left">
                                                     {row.status ? row.status : ''}
@@ -151,7 +163,7 @@ function HomeList() {
                                             <TablePagination
                                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                                 colSpan={3}
-                                                count={Store.homeGetAllReducer.result ? Store.homeGetAllReducer.result.length : 0}
+                                                count={Store.villagerGetAllReducer.result ? Store.villagerGetAllReducer.result.length : 0}
                                                 rowsPerPage={rowsPerPage}
                                                 page={page}
                                                 SelectProps={{
@@ -177,10 +189,10 @@ function HomeList() {
 }
 
 
-const mapStateToProps = ({ mainReducer, homeGetAllReducer }) => ({ mainReducer, homeGetAllReducer })
+const mapStateToProps = ({ mainReducer, villagerGetAllReducer }) => ({ mainReducer, villagerGetAllReducer })
 
 const mapDispatchToProps = {
-    GetHomeAllAction,
+    GetVillagerAllAction,
     checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(HomeList);
+export default connect(mapStateToProps, mapDispatchToProps)(VillagerList);

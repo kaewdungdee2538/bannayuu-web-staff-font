@@ -10,3 +10,4 @@ export const MESSAGE_REMARKNOTFOUND = "กรุณากรอกเหตุ�
 export const MESSAGE_EXCELROW_NOTFOUND = "ข้อมูลในไฟล์ Excel จากต้องมากกว่า 1 แถว"
 export const MESSAGE_EXCELCOLUMN_NOTCOMPLETE = "จำนวนคอลัมน์ไม่ถูกต้อง"
 export const MESSAGE_SUCCESS = "เรียบร้อย"
+export const MESSAGE_COMPANYID_NOTFOUND = 'ทำรายการผิดพลาด เลือกโครงการใหม่อีกครั้ง'

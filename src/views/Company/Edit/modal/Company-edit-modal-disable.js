@@ -13,9 +13,9 @@ function CompanyEditModalDisable(props) {
         <DialogContent dividers={scroll === 'paper'} >
             <div>
                 <GridContainer>
-                    <GridItem xs={12} sm={12} md={10}>
+                    <GridItem xs={12} sm={12} md={12}>
                         <GridContainer>
-                            <GridItem xs={12} sm={12} md={6}>
+                            <GridItem xs={12} sm={12} md={12}>
                                 <InputFile
                                     title="เลือกรูปภาพหลักฐานที่แจ้งระงับโครงการ"
                                     setValue={setImage}

@@ -58,7 +58,7 @@ function ExcelFormMaterialUi(props) {
     return (<DropzoneArea
         acceptedFiles={[".xlsx"]}
         filesLimit={1}
-        dropzoneText={"Drag and drop an image here or click"}
+        dropzoneText={"Drag and drop an excel file here or click"}
         getPreviewIcon={handlePreviewIcon}
         onChange={onSelectFile}
     />)

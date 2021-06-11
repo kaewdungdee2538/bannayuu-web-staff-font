@@ -83,7 +83,7 @@ function CompanyAdd() {
         dispatch(CreateCompanyAction(history, {
             company_code: companyInfo.company_code,
             company_name: companyInfo.company_name,
-            price_of_cardloss: companyInfo.price_of_cardloss,
+            price_of_cardloss: companyInfo.price_of_cardloss.toString(),
             company_start_date: moment(dateStart).set({ hour: 0, minute: 0, second: 0 }).format("yyyy-MM-DD HH:mm:ss"),
             company_expire_date: moment(dateEnd).set({ hour: 0, minute: 0, second: 0 }).format("yyyy-MM-DD HH:mm:ss"),
             company_promotion: promotion,

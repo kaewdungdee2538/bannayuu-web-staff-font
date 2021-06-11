@@ -106,6 +106,7 @@ export default function Admin({ ...rest }) {
       <Sidebar
         rtlActive={false}
         routes={routes}
+        secondRoutes={secondRoutes}
         logoText={"Web Admin"}
         logo={logo}
         image={imagine3}

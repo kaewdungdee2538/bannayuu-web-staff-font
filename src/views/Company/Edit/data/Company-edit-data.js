@@ -51,6 +51,8 @@ export const getStatus = (status) => {
             return "สถานะพร้อมใช้งาน";
         case "EXPIRE":
             return "สถานะหมดอายุ";
+        case "NOTOPEN":
+            return "สถานะยังไม่เปิดให้บริการ"
         default:
             return "สถานะระงับการให้บริการ";
     }

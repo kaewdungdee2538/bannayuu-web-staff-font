@@ -19,7 +19,7 @@ function InputFile(props) {
                 }}
                 inputProps={{
                     type: "file",
-                    accept: "image/*",
+                    accept: "image/png, image/jpeg",
 
                     value: value,
                     onChange: event=>setValue(event.target.files.item(0))
