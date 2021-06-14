@@ -20,6 +20,7 @@ import HomeImportData from "views/Home/import/Home-import";
 import HomeList from "views/Home/home-list/Home-list"
 import VillagerImportData from "views/Villager/import/Villager-import"
 import VillagerList from "views/Villager/villager-list/Villager-list"
+import UserAdd from "views/user/add/User-add"
 // core components/views for RTL layout
 
 const secondRoutes = [
@@ -38,6 +39,10 @@ const secondRoutes = [
   },{
     path: "/villager-list",
     component: VillagerList,
+    layout: "/admin",
+  },{
+    path: "/user-add",
+    component: UserAdd,
     layout: "/admin",
   }
 ];

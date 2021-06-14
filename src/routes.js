@@ -27,6 +27,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import HomeWork from "@material-ui/icons/HomeWork"
 import Group from "@material-ui/icons/Group"
+import AccountBalance from "@material-ui/icons/SupervisedUserCircle"
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -40,6 +41,7 @@ import CompanyAdd from "views/Company/Add/Company-add";
 import CompanyEdit from "views/Company/Edit/Company-edit";
 import HomeMain from "views/Home/main/Home-main";
 import VillagerMain from "views/Villager/main/Villager-main"
+import UserMain from "views/user/main/User-main"
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -85,6 +87,13 @@ const dashboardRoutes = [
     name: "Villager Import From Excel",
     icon: Group,
     component: VillagerMain,
+    layout: "/admin",
+  },
+  {
+    path: "/user-main",
+    name: "User Management",
+    icon: AccountBalance,
+    component: UserMain,
     layout: "/admin",
   },
   {
