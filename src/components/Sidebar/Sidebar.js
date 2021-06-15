@@ -28,7 +28,6 @@ export default function Sidebar(props) {
   let location = useLocation();
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
-    console.log(routeName);
     return location.pathname === routeName;
   }
   const { color, logo, image, logoText, routes,secondRoutes } = props;

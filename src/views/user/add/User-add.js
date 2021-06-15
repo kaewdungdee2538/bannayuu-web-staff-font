@@ -13,9 +13,12 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter"
 import Icon from '@material-ui/core/Icon';
 import CardIcon from "components/Card/CardIcon.js";
+import SelectBox from "components/Select/SelectBox"
+import TransferList from "components/TransferList/TransferList"
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { GetPrivilegeAllAction } from "actions/privilege/privilege-all.action"
 import { GetCompanyListAllAction } from "actions/company/company-list.action"
+
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { ValidateEmail, allnumeric, isNotEngCharOrNumber } from "utils/formatCharacter.util"
 // import { buttonStyle } from "utils/btnStyle.utils"
@@ -39,25 +42,36 @@ function UserAdd() {
     const [messageErr, setMessageErr] = useState({
         email: ""
     })
+    const [selectPrivilege, setSelectPrivilege] = useState("");
+    const [companyListItemRight, setCompanyListItemRight] = useState([]);
+    const [companyListItemLeft, setCompanyListItemLeft] = useState([]);
     //-----------------Form load
     useEffect(() => {
         loadMainForm();
-        loadPrivilegeItems();
     }, []);
     function loadMainForm() {
         const authStore = Store.loginReducer.result;
         if (!authStore) {
             history.push("/login");
-        } else {
+        } else if (!Store.companySelectedReducer.result){
+            history.push("/admin/user-main");
+        }else {
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetPrivilegeAllAction(history, authStore))
             dispatch(GetCompanyListAllAction(history, authStore))
         }
     }
-    //------------------load privilege
-    function loadPrivilegeItems() {
-
-    }
+    const privilegeItems = Store.privilegeGetAllReducer.result.map(item => {
+        return {
+            key: item.employee_privilege_type,
+            value: item.employee_privilege_id,
+            text: item.employee_privilege_name_th
+        }
+    })
+    if (Store.companyListGetAllReducer.result.length > 0 && companyListItemLeft.length === 0 && companyListItemRight.length === 0)
+        setCompanyListItemLeft(Store.companyListGetAllReducer.result.map(item => {
+            return { value: item.company_name, id: item.company_id }
+        }).filter(fil=>fil.id != Store.companySelectedReducer.result.company_id))
     //----------------------------------------------------
     return (
         <div>
@@ -114,21 +128,6 @@ function UserAdd() {
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <CustomInput
-                                        labelText="ที่อยู่"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            maxLength: "255",
-                                            value: userInfo.remark,
-                                            multiline: true,
-                                            rows: 4,
-                                            onChange: event => setUserInfo({ ...userInfo, remark: event.target.value })
-                                        }}
-                                    />
-                                </GridItem>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <CustomInput
                                         labelText="เบอร์โทรศัพท์"
@@ -189,9 +188,26 @@ function UserAdd() {
                             </GridContainer>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
+                                    <CustomInput
+                                        labelText="ที่อยู่"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                        }}
+                                        inputProps={{
+                                            maxLength: "255",
+                                            value: userInfo.remark,
+                                            multiline: true,
+                                            rows: 4,
+                                            onChange: event => setUserInfo({ ...userInfo, remark: event.target.value })
+                                        }}
+                                    />
+                                </GridItem>
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
                                     <Card>
                                         <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
+                                            <CardIcon color="success">
                                                 <Icon>supervised_user_circle</Icon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>User Setting</p>
@@ -222,8 +238,6 @@ function UserAdd() {
                                                     />
                                                     <span style={{ color: "red" }}>{messageErr.username}</span>
                                                 </GridItem>
-                                            </GridContainer>
-                                            <GridContainer>
                                                 <GridItem xs={12} sm={6} md={6}>
                                                     <CustomInput
                                                         labelText="Password"
@@ -250,6 +264,34 @@ function UserAdd() {
                                                     <span style={{ color: "red" }}>{messageErr.password}</span>
                                                 </GridItem>
                                             </GridContainer>
+                                            <GridContainer>
+                                                <GridItem xs={12} sm={6} md={6}>
+                                                    <SelectBox
+                                                        title="เลือกสิทธิ์การเข้าใช้งาน"
+                                                        value={selectPrivilege}
+                                                        setValue={setSelectPrivilege}
+                                                        items={privilegeItems}
+                                                    />
+                                                </GridItem>
+                                                <span style={{ color: "red" }}>{messageErr.privilege}</span>
+                                            </GridContainer>
+                                            <br></br>
+                                            <GridContainer>
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <h4 style={{ textAlign: "center" }}>เลือกโครงการที่ดูแลเพิ่มเติม</h4>
+                                                </GridItem>
+                                                <br></br>
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <TransferList
+                                                        titleLeft="โครงการที่ยังไม่เลือก"
+                                                        titleRight="โครงการที่ถูกเลือก"
+                                                        leftItems={companyListItemLeft}
+                                                        setLeftItems={setCompanyListItemLeft}
+                                                        rightItems={companyListItemRight}
+                                                        setRightItems={setCompanyListItemRight}
+                                                    />
+                                                </GridItem>
+                                            </GridContainer>
                                         </CardBody>
                                     </Card>
                                 </GridItem>
@@ -258,7 +300,7 @@ function UserAdd() {
                         <CardFooter>
                             <Button color="success"
                                 endIcon={<Icon style={{ fontSize: "25px" }}>person_add</Icon>}
-                            >สร้างผู้ใช้งานใหม่</Button>
+                            >สร้างผู้ใช้งาน</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>

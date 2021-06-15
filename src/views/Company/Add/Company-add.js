@@ -164,7 +164,7 @@ function CompanyAdd() {
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
+                                <GridItem xs={12} sm={6} md={6}>
                                     <SelectBox
                                         title="เลือก Pro"
                                         setValue={setPromotion}

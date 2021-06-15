@@ -13,6 +13,8 @@ import CardBody from "components/Card/CardBody.js";
 import Icon from '@material-ui/core/Icon';
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { buttonStyle } from "utils/btnStyle.utils"
+import { setClearSelectCompany } from "actions/company/company-selected.action"
+
 const useStyles = makeStyles(styles);
 
 function UserMain() {
@@ -31,10 +33,12 @@ function UserMain() {
             history.push("/login");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
-            
+            dispatch(setClearSelectCompany());
         }
     }
-
+    function onCreateClick(){
+        history.push("/admin/user-add-select")
+    }
     //----------------------------------------------------
     return (
         <div>
@@ -50,7 +54,7 @@ function UserMain() {
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Button
-                                        onClick={() => { history.push("/admin/user-add")}}
+                                        onClick={onCreateClick}
                                         className={classesBtn.btnAdd}
                                         endIcon={<Icon style={{ fontSize: "30px" }}>person_add</Icon>}
                                     >
