@@ -6,10 +6,11 @@ import {
     MESSAGE_COMPANYNAME_NOTFOUND,
     MESSAGE_PRICEOFCARDLOST_NOTFOUND,
     MESSAGE_NOTSELECT_PRO_COMPANY,
-    MESSAGE_NOTSELECTIMAGE
+    MESSAGE_NOTSELECTIMAGE,
+    MESSAGE_FILE_IMAGE_INVALID,
 } from 'constants/message.constant'
 import swal from 'sweetalert';
-
+import { getExtension, isImage } from "utils/funcImage.utils"
 
 export const CreateCompanyAction = (history, credential, authStore) => {
     return async dispatch => {
@@ -47,6 +48,9 @@ function createCompanyMiddleware(valuesObj) {
         return false;
     } else if (!valuesObj.image) {
         swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
+        return false;
+    }else if(!isImage(getExtension(valuesObj.image.name))){
+        swal("Warning!", MESSAGE_FILE_IMAGE_INVALID, "warning");
         return false;
     }
     return true;

@@ -33,7 +33,7 @@ import { setSelectCompanySuccess, setClearSelectCompany } from "actions/company/
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(editCompantStyle);
-function UserAddSelectCompany() {
+function UserChangePrivilegeSelectCompany() {
     const classes = useStyles();
     const classes2 = useStyles2();
     const classesModal = modalStyle();
@@ -50,6 +50,7 @@ function UserAddSelectCompany() {
     }, []);
     async function loadCompanyEditForm(textSearch) {
         const authStore = Store.loginReducer.result;
+        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
@@ -88,8 +89,10 @@ function UserAddSelectCompany() {
     //--------------Show Modal Edit
     function onShowModal(event) {
         const company_id = event.target.getAttribute("company_id")
-        dispatch(setSelectCompanySuccess({ company_id }));
-        history.push("/admin/user-add")
+        if (company_id) {
+            dispatch(setSelectCompanySuccess({ company_id }));
+            history.push("/admin/user-change-privilege-list")
+        }
     }
 
     //----------------------------------------------------
@@ -99,8 +102,8 @@ function UserAddSelectCompany() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อสร้าง User</h4>
-                            <p className={classes.cardCategoryWhite}>Select company for create user</p>
+                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อเปลี่ยนแปลงสิทธิ์การใช้งานระบบของ User</h4>
+                            <p className={classes.cardCategoryWhite}>Select company for change privilege of user</p>
                         </CardHeader>
 
                         <CardBody>
@@ -209,4 +212,4 @@ const mapDispatchToProps = {
     checkJWTTOKENAction,
     setSelectCompanySuccess
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserAddSelectCompany);
+export default connect(mapStateToProps, mapDispatchToProps)(UserChangePrivilegeSelectCompany);

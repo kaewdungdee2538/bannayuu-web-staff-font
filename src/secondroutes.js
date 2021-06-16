@@ -22,6 +22,12 @@ import VillagerImportData from "views/Villager/import/Villager-import"
 import VillagerList from "views/Villager/villager-list/Villager-list"
 import UserAddSelectCompany from "views/user/add/User-add-select-company"
 import UserAdd from "views/user/add/User-add"
+import UserEditSelectCompany from "views/user/edit-info/User-edit-select-company"
+import UserEditList from "views/user/edit-info/User-edit-list"
+import UserEditInfo from "views/user/edit-info/User-edit-info"
+import UserChangePrivilegeSelectCompany from "views/user/change-privilege/User-change-privilege-select-company"
+import UserChangePrivilegeList from "views/user/change-privilege/User-change-privilege-list"
+import UserChangePrivilege from "views/user/change-privilege/User-change-privilege"
 // core components/views for RTL layout
 
 const secondRoutes = [
@@ -49,7 +55,32 @@ const secondRoutes = [
     path: "/user-add",
     component: UserAdd,
     layout: "/admin",
-  }
+  },{
+    path: "/user-edit-info-select",
+    component: UserEditSelectCompany,
+    layout: "/admin",
+  },{
+    path: "/user-edit-list",
+    component: UserEditList,
+    layout: "/admin",
+  },{
+    path: "/user-edit-info",
+    component: UserEditInfo,
+    layout: "/admin",
+  },{
+    path: "/user-change-privilege-select",
+    component: UserChangePrivilegeSelectCompany,
+    layout: "/admin",
+  },{
+    path: "/user-change-privilege-list",
+    component: UserChangePrivilegeList,
+    layout: "/admin",
+  },{
+    path: "/user-change-privilege",
+    component: UserChangePrivilege,
+    layout: "/admin",
+  },
+  
 ];
 
 export default secondRoutes;

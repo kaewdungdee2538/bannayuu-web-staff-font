@@ -10,6 +10,8 @@ import homeGetAllReducer from 'reducers/home/home-get-all.reducer'
 import villagerImportExcelReducer from 'reducers/villager/villager-import-excel.reducer'
 import villagerGetAllReducer from 'reducers/villager/villager-get-all.reducer'
 import privilegeGetAllReducer from 'reducers/privilege/privilege-get-all.reducer'
+import userListGetAllReducer from 'reducers/user/user-list-get-all.reducer'
+import userSelectReducer from 'reducers/user/user-select.reducer'
 export default combineReducers({
     loginReducer,
     logoutReducer,
@@ -21,5 +23,7 @@ export default combineReducers({
     homeGetAllReducer,
     villagerImportExcelReducer,
     villagerGetAllReducer,
-    privilegeGetAllReducer
+    privilegeGetAllReducer,
+    userListGetAllReducer,
+    userSelectReducer
 })

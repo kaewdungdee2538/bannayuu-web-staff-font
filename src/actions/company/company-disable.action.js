@@ -6,10 +6,12 @@ import {
 } from 'actions/main/main.action'
 import {
     MESSAGE_NOTSELECTIMAGE,
-    MESSAGE_REMARKNOTFOUND
+    MESSAGE_REMARKNOTFOUND,
+    MESSAGE_FILE_IMAGE_INVALID
 } from 'constants/message.constant'
 import { MAIN_URL, DISABLE_COMPANY_API } from 'constants/api-route'
 import { httpClientPOSTMethodFormData } from 'utils/httpClient.utils'
+import { getExtension, isImage } from "utils/funcImage.utils"
 
 
 export const DisableCompanyAction = (history, credential, authStore) => {
@@ -36,6 +38,9 @@ export const DisableCompanyAction = (history, credential, authStore) => {
 function disableCompanyMiddleware(valuesObj) {
      if (!valuesObj.image) {
         swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
+        return false;
+    }else if(!isImage(getExtension(valuesObj.image.name))){
+        swal("Warning!", MESSAGE_FILE_IMAGE_INVALID, "warning");
         return false;
     } else if(!valuesObj.remark){
         swal("Warning!", MESSAGE_REMARKNOTFOUND, "warning");

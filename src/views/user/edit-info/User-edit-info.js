@@ -12,16 +12,14 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter"
 import Icon from '@material-ui/core/Icon';
-import CardIcon from "components/Card/CardIcon.js";
-import SelectBox from "components/Select/SelectBox"
-import TransferList from "components/TransferList/TransferList"
+import Label from "components/Label/Label"
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { GetPrivilegeAllAction } from "actions/privilege/privilege-all.action"
-import { GetCompanyListAllAction } from "actions/company/company-list.action"
-import { CreateUserAction } from "actions/user/user-add.action"
+import { GetUserByID } from "actions/user/user-get-info.action"
+import { EditUserAction } from "actions/user/user-edit-info.action"
 import CustomInput from "components/CustomInput/CustomInput.js";
 import swal from 'sweetalert';
-import { ValidateEmail, ValidateLine, allnumeric, isNotEngCharOrNumber, IsProhibitSpecial, IsHomeProbitSpecial } from "utils/formatCharacter.util"
+import { ValidateEmail, ValidateLine, allnumeric, IsProhibitSpecial, IsHomeProbitSpecial } from "utils/formatCharacter.util"
 import {
     MESSAGE_FIRST_NAME_NOTFOUND,
     MESSAGE_FIRST_NAME_PROHIBIT_SPECIAL,
@@ -32,34 +30,24 @@ import {
     MESSAGE_MOBILE_NOT_10_CHARACTER,
     MESSAGE_LINE_FORMAT_INVALID,
     MESSAGE_EMAIL_FORMAT_INVALID,
-    MESSAGE_NOT_SELECT_PRIVILEGE,
-    MESSAGE_USER_NOT_FOUND,
-    MESSAGE_USER_NOT_END_OR_NUMBER,
-    MESSAGE_PASSWORD_NOT_FOUND,
-    MESSAGE_PASSWORD_NOT_END_OR_NUMBER,
     MESSAGE_COMPANY_ID_NOTFOUND,
-    MESSAGE_PASSWORD_NOT_EQUAL
 } from "constants/message.constant"
-// import { buttonStyle } from "utils/btnStyle.utils"
 const useStyles = makeStyles(styles);
 
-function UserAdd() {
+function UserEditInfo() {
     const history = useHistory();
     const classes = useStyles();
-    // const classesBtn = buttonStyle();
     const Store = useSelector(state => state)
     const dispatch = useDispatch();
     //-----------------state
     const [userInfo, setUserInfo] = useState({
+        username: "",
         first_name: "",
         last_name: "",
         address: "",
         mobile: "",
         line: "",
         email: "",
-        username: "",
-        password: "",
-        password_confirm: ""
     })
     const [messageErr, setMessageErr] = useState({
         first_name: "",
@@ -67,72 +55,66 @@ function UserAdd() {
         address: "",
         mobile: "",
         line: "",
-        email: "",
-        username: "",
-        password: "",
-        password_confirm: "",
-        privilege: ""
+        email: ""
     })
-    const [selectPrivilege, setSelectPrivilege] = useState("");
-    const [companyListItemRight, setCompanyListItemRight] = useState([]);
-    const [companyListItemLeft, setCompanyListItemLeft] = useState([]);
     //-----------------Form load
     useEffect(() => {
         loadMainForm();
     }, []);
-    function loadMainForm() {
+    async function loadMainForm() {
         const authStore = Store.loginReducer.result;
+        const companyStore = Store.companySelectedReducer.result;
+        const userStore = Store.userSelectReducer.result;
         if (!authStore) {
             history.push("/login");
-        } else if (!Store.companySelectedReducer.result) {
-            history.push("/admin/user-main");
+        } else if (!companyStore) {
+            history.push("/admin/user-edit-info-select");
+        } else if (!userStore) {
+            history.push("/admin/user-edit-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
-            dispatch(GetPrivilegeAllAction(history, authStore))
-            dispatch(GetCompanyListAllAction(history, authStore))
+            const valuesObj = {
+                company_id: companyStore.company_id,
+                employee_id: userStore.employee_id
+            }
+            const getData = await GetUserByID(dispatch, valuesObj, authStore)
+            if (getData.error) {
+                swal("Warning!", getData.message, "warning");
+            } else {
+                const result = getData.result;
+                setUserInfo({
+                    username: result.username,
+                    first_name: result.first_name_th,
+                    last_name: result.last_name_th,
+                    address: result.address,
+                    mobile: result.employee_mobile,
+                    line: result.employee_line,
+                    email: result.employee_email,
+                })
+            }
         }
     }
-    const privilegeItems = Store.privilegeGetAllReducer.result.map(item => {
-        return {
-            key: item.employee_privilege_type,
-            value: item.employee_privilege_id,
-            text: item.employee_privilege_name_th
-        }
-    })
-    if (Store.companyListGetAllReducer.result.length > 0 && companyListItemLeft.length === 0 && companyListItemRight.length === 0)
-        setCompanyListItemLeft(Store.companyListGetAllReducer.result.map(item => {
-            return { value: item.company_name, id: item.company_id }
-        }).filter(fil => fil.id != Store.companySelectedReducer.result.company_id))
 
     //-----------------------On Create Click
-    function onCreateClick() {
+    function onEditInfoClick() {
         const company_id = parseInt(Store.companySelectedReducer.result.company_id)
-        const employee_type = Store.privilegeGetAllReducer.result.filter(item => { return item.employee_privilege_id == selectPrivilege }).map(item => {
-            return item.employee_privilege_type
-        })
-        const company_list = companyListItemRight.map(item => item.id)
+        const employee_id = parseInt(Store.userSelectReducer.result.employee_id)
         const valuesObj = {
+            employee_id: employee_id.toString(),
             first_name: userInfo.first_name,
             last_name: userInfo.last_name,
             address: userInfo.address,
             mobile: userInfo.mobile,
             line: userInfo.line,
             email: userInfo.email,
-            username: userInfo.username,
-            password: userInfo.password,
-            password_confirm: userInfo.password_confirm,
-            employee_privilege_id: selectPrivilege.toString(),
-            status: "INIT",
-            employee_type: employee_type[0],
             company_id: company_id.toString(),
-            company_list: [company_id, ...company_list]
         }
-        if (createUserMiddleware(valuesObj)) {
-            dispatch(CreateUserAction(history, valuesObj, Store.loginReducer.result));
+        if (editInfoUserMiddleware(valuesObj)) {
+            dispatch(EditUserAction(history, valuesObj, Store.loginReducer.result));
         }
     }
     //-----------------------Middleware for Create 
-    function createUserMiddleware(valuesObj) {
+    function editInfoUserMiddleware(valuesObj) {
         resetTextError();
         if (!valuesObj.company_id) {
             swal("Warning!", MESSAGE_COMPANY_ID_NOTFOUND, "warning");
@@ -152,30 +134,6 @@ function UserAdd() {
         } else if (IsProhibitSpecial(valuesObj.last_name)) {
             swal("Warning!", MESSAGE_LAST_NAME_PROHIBIT_SPECIAL, "warning");
             setMessageErr({ ...messageErr, last_name: MESSAGE_LAST_NAME_PROHIBIT_SPECIAL })
-            return false;
-        } else if (!valuesObj.username) {
-            swal("Warning!", MESSAGE_USER_NOT_FOUND, "warning");
-            setMessageErr({ ...messageErr, username: MESSAGE_USER_NOT_FOUND })
-            return false;
-        } else if (isNotEngCharOrNumber(valuesObj.username)) {
-            swal("Warning!", MESSAGE_USER_NOT_END_OR_NUMBER, "warning");
-            setMessageErr({ ...messageErr, username: MESSAGE_USER_NOT_END_OR_NUMBER })
-            return false;
-        } else if (!valuesObj.password) {
-            swal("Warning!", MESSAGE_PASSWORD_NOT_FOUND, "warning");
-            setMessageErr({ ...messageErr, password: MESSAGE_PASSWORD_NOT_FOUND })
-            return false;
-        } else if (isNotEngCharOrNumber(valuesObj.password)) {
-            swal("Warning!", MESSAGE_PASSWORD_NOT_END_OR_NUMBER, "warning");
-            setMessageErr({ ...messageErr, password: MESSAGE_PASSWORD_NOT_END_OR_NUMBER })
-            return false;
-        } else if (valuesObj.password != valuesObj.password_confirm) {
-            swal("Warning!", MESSAGE_PASSWORD_NOT_EQUAL, "warning");
-            setMessageErr({ ...messageErr, password: MESSAGE_PASSWORD_NOT_EQUAL, password_confirm: MESSAGE_PASSWORD_NOT_EQUAL })
-            return false;
-        } else if (!valuesObj.employee_privilege_id) {
-            swal("Warning!", MESSAGE_NOT_SELECT_PRIVILEGE, "warning");
-            setMessageErr({ ...messageErr, privilege: MESSAGE_NOT_SELECT_PRIVILEGE })
             return false;
         } else if (IsHomeProbitSpecial(valuesObj.address)) {
             swal("Warning!", MESSAGE_ADDRESS_PROHITBIT_SPECIAL, "warning");
@@ -214,11 +172,7 @@ function UserAdd() {
             address: "",
             mobile: "",
             line: "",
-            email: "",
-            username: "",
-            password: "",
-            password_confirm: "",
-            privilege: ""
+            email: ""
         })
     }
     //----------------------------------------------------
@@ -228,10 +182,14 @@ function UserAdd() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>สร้างผู้ใช้งานใหม่</h4>
-                            <p className={classes.cardCategoryWhite}>Create New User</p>
+                            <h4 className={classes.cardTitleWhite}>แก้ไขข้อมูลผู้ใช้งาน</h4>
+                            <p className={classes.cardCategoryWhite}>Edit user information</p>
                         </CardHeader>
                         <CardBody>
+                            <Label
+                                title="Username"
+                                value={userInfo.username}
+                            />
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <CustomInput
@@ -374,131 +332,14 @@ function UserAdd() {
                                     <span style={{ color: "red" }}>{messageErr.address}</span>
                                 </GridItem>
                             </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={12}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="success">
-                                                <Icon>supervised_user_circle</Icon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>User Setting</p>
-                                        </CardHeader>
-                                        <CardBody>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <CustomInput
-                                                        labelText="Username"
-                                                        formControlProps={{
-                                                            fullWidth: true,
-                                                        }}
-                                                        inputProps={{
-                                                            maxLength: "100",
-                                                            value: userInfo.username,
-                                                            onChange: event => setUserInfo({ ...userInfo, username: event.target.value }),
-                                                            onBlur: event => {
-                                                                const pass = event.target.value
-                                                                if (!pass) {
-                                                                    setMessageErr({ ...messageErr, username: MESSAGE_USER_NOT_FOUND })
-                                                                } else if (isNotEngCharOrNumber(pass)) {
-                                                                    setMessageErr({ ...messageErr, username: MESSAGE_USER_NOT_END_OR_NUMBER })
-                                                                } else {
-                                                                    setMessageErr({ ...messageErr, username: "" })
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                    <span style={{ color: "red" }}>{messageErr.username}</span>
-                                                </GridItem>
-
-                                            </GridContainer>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <CustomInput
-                                                        labelText="Password"
-                                                        formControlProps={{
-                                                            fullWidth: true,
-                                                        }}
-                                                        inputProps={{
-                                                            maxLength: "50",
-                                                            type: "password",
-                                                            value: userInfo.password,
-                                                            onChange: event => setUserInfo({ ...userInfo, password: event.target.value }),
-                                                            onBlur: event => {
-                                                                const pass = event.target.value
-                                                                if (!pass) {
-                                                                    setMessageErr({ ...messageErr, password: MESSAGE_PASSWORD_NOT_FOUND })
-                                                                } else if (isNotEngCharOrNumber(pass)) {
-                                                                    setMessageErr({ ...messageErr, password: MESSAGE_PASSWORD_NOT_END_OR_NUMBER })
-                                                                } else {
-                                                                    setMessageErr({ ...messageErr, password: "" })
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                    <span style={{ color: "red" }}>{messageErr.password}</span>
-                                                </GridItem>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <CustomInput
-                                                        labelText="Comfirm-Password"
-                                                        formControlProps={{
-                                                            fullWidth: true,
-                                                        }}
-                                                        inputProps={{
-                                                            maxLength: "50",
-                                                            type: "password",
-                                                            value: userInfo.password_confirm,
-                                                            onChange: event => setUserInfo({ ...userInfo, password_confirm: event.target.value }),
-                                                            onBlur: event => {
-                                                                const pass = event.target.value
-                                                                if (pass != userInfo.password) {
-                                                                    setMessageErr({ ...messageErr, password_confirm: MESSAGE_PASSWORD_NOT_EQUAL })
-                                                                } else {
-                                                                    setMessageErr({ ...messageErr, password_confirm: "" })
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                    <span style={{ color: "red" }}>{messageErr.password_confirm}</span>
-                                                </GridItem>
-                                            </GridContainer>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <SelectBox
-                                                        title="เลือกสิทธิ์การเข้าใช้งาน"
-                                                        value={selectPrivilege}
-                                                        setValue={setSelectPrivilege}
-                                                        items={privilegeItems}
-                                                    />
-                                                    <span style={{ color: "red" }}>{messageErr.privilege}</span>
-                                                </GridItem>
-                                            </GridContainer>
-                                            <br></br>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={12} md={12}>
-                                                    <h4 style={{ textAlign: "center" }}>เลือกโครงการที่ดูแลเพิ่มเติม</h4>
-                                                </GridItem>
-                                                <br></br>
-                                                <GridItem xs={12} sm={12} md={12}>
-                                                    <TransferList
-                                                        titleLeft="โครงการที่ยังไม่เลือก"
-                                                        titleRight="โครงการที่ถูกเลือก"
-                                                        leftItems={companyListItemLeft}
-                                                        setLeftItems={setCompanyListItemLeft}
-                                                        rightItems={companyListItemRight}
-                                                        setRightItems={setCompanyListItemRight}
-                                                    />
-                                                </GridItem>
-                                            </GridContainer>
-                                        </CardBody>
-                                    </Card>
-                                </GridItem>
-                            </GridContainer>
                         </CardBody>
                         <CardFooter>
-                            <Button color="success"
-                                onClick={onCreateClick}
-                                endIcon={<Icon style={{ fontSize: "25px" }}>person_add</Icon>}
-                            >สร้างผู้ใช้งาน</Button>
+                            <Button
+                                color="primary"
+                                className={classes.btnSave}
+                                onClick={onEditInfoClick}
+                                endIcon={<Icon style={{ fontSize: "25px" }}>save</Icon>}
+                            >แก้ไขข้อมูลผู้ใช้งาน</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>
@@ -512,6 +353,8 @@ const mapStateToProps = ({ mainReducer, privilegeGetAllReducer, companyListGetAl
 
 const mapDispatchToProps = {
     checkJWTTOKENAction,
-    GetPrivilegeAllAction
+    GetPrivilegeAllAction,
+    GetUserByID,
+    EditUserAction,
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserAdd);
+export default connect(mapStateToProps, mapDispatchToProps)(UserEditInfo);

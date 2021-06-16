@@ -36,9 +36,16 @@ function UserMain() {
             dispatch(setClearSelectCompany());
         }
     }
-    function onCreateClick(){
+    function onCreateClick() {
         history.push("/admin/user-add-select")
     }
+    function onEditInformationClick() {
+        history.push("/admin/user-edit-info-select")
+    }
+    function onChangePrivilegeClick() {
+        history.push("/admin/user-change-privilege-select")
+    }
+
     //----------------------------------------------------
     return (
         <div>
@@ -63,6 +70,7 @@ function UserMain() {
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Button
+                                        onClick={onEditInformationClick}
                                         className={classesBtn.btnEdit}
                                         endIcon={<Icon style={{ fontSize: "30px" }}>recent_actors</Icon>}
                                     >
@@ -74,6 +82,7 @@ function UserMain() {
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Button
+                                        onClick={onChangePrivilegeClick}
                                         className={classesBtn.btnAdd}
                                         endIcon={<Icon style={{ fontSize: "30px" }}>admin_panel_settings</Icon>}
                                     >

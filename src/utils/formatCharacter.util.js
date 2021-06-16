@@ -1,12 +1,13 @@
-const formatEng = /[^a-zA-Z0-9]/;
+
 export function isNotEngCharOrNumber(input) {
+    const formatEng = /[^a-zA-Z0-9]/;
     if (formatEng.test(input))
         return true;
     return false;
 }
 
 export function allnumeric(inputtxt) {
-    var numbers = /^[0-9]+$/;
+    const numbers = /^[0-9]+$/;
     if (inputtxt.match(numbers)) {
         return true;
     }
@@ -20,4 +21,28 @@ export function ValidateEmail(mail) {
         return (true)
     }
     return (false)
+}
+
+export function ValidateLine(inputtxt) {
+    const formatline = /[`!#$%^&*()+\-={};':"\\|,<>?~]/;
+    if (formatline.test(inputtxt)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+export function IsProhibitSpecial(input) {
+    const formatname = /[`!@#$%^&*()_+\-={};':"\\|,.<>?~]/;
+    if (formatname.test(input))
+        return true;
+    return false;
+}
+
+export function IsHomeProbitSpecial(input) {
+    const formathome = /[`@#$%^&*;'|<>~]/;
+    if (formathome.test(input))
+        return true;
+    return false;
 }

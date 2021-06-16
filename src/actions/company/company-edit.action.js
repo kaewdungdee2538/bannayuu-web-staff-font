@@ -17,10 +17,12 @@ import {
     MESSAGE_PRICEOFCARDLOST_NOTFOUND,
     MESSAGE_NOTSELECT_PRO_COMPANY,
     MESSAGE_NOTSELECTIMAGE,
-    MESSAGE_REMARKNOTFOUND
+    MESSAGE_REMARKNOTFOUND,
+    MESSAGE_FILE_IMAGE_INVALID
 } from 'constants/message.constant'
 import { MAIN_URL, GET_COMPANY_ALL_API, GET_COMPANY_BYID_API, EDIT_COMPANY_INFO_API } from 'constants/api-route'
 import { httpClientGetMethodWithPost, httpClientPOSTMethodFormData } from 'utils/httpClient.utils'
+import { getExtension, isImage } from "utils/funcImage.utils"
 
 export const setGetCompanyAllFetching = () => ({
     type: HTTP_GET_COMPANY_ALL_FETCHING
@@ -99,7 +101,6 @@ export const EditCompanyAction = (history, credential, authStore) => {
 }
 
 function editCompanyMiddleware(valuesObj) {
-    console.log(valuesObj)
     if (!valuesObj.company_code) {
         swal("Warning!", MESSAGE_COMPANYCODE_NOTFOUND, "warning");
         return false;
@@ -114,6 +115,9 @@ function editCompanyMiddleware(valuesObj) {
         return false;
     } else if (!valuesObj.image) {
         swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
+        return false;
+    } else if (!isImage(getExtension(valuesObj.image.name))) {
+        swal("Warning!", MESSAGE_FILE_IMAGE_INVALID, "warning");
         return false;
     } else if (!valuesObj.remark) {
         swal("Warning!", MESSAGE_REMARKNOTFOUND, "warning");

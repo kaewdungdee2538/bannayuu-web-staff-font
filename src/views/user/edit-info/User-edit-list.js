@@ -1,6 +1,5 @@
 import { styles } from "views/Company/Add/Company-style"
 import { makeStyles } from "@material-ui/core/styles";
-import { modalStyle } from 'utils/modalStyle.utils'
 import { connect } from 'react-redux';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -23,26 +22,25 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
-import { GetCompanyAllAction } from "actions/company/company-edit.action"
-import { headerTable } from 'views/Company/Edit/data/Company-edit-data'
+import { GetCompanyListAllAction } from "actions/user/user-get-list.action"
+import { setSelectUserSuccess,setClearSelectUser } from 'actions/user/user-select.action'
+import { userHeaderTable } from 'views/user/data/User.data'
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
 import { editCompantStyle } from "views/Company/Edit/Company-edit-style"
-import { setSelectCompanySuccess, setClearSelectCompany } from "actions/company/company-selected.action"
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(editCompantStyle);
-function UserAddSelectCompany() {
+function UserEditList() {
     const classes = useStyles();
     const classes2 = useStyles2();
-    const classesModal = modalStyle();
     const Store = useSelector(store => store);
     const dispatch = useDispatch();
     const history = useHistory();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const emptyRows = calEmptyRows(Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result : 0);
+    const emptyRows = calEmptyRows(Store.userListGetAllReducer.result ? Store.userListGetAllReducer.result : 0);
 
     //---------------------on load
     useEffect(() => {
@@ -50,15 +48,22 @@ function UserAddSelectCompany() {
     }, []);
     async function loadCompanyEditForm(textSearch) {
         const authStore = Store.loginReducer.result;
+        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
-            const valuesObj = {
-                company_code_or_name: textSearch
+            if (Store.companySelectedReducer.result) {
+                const valuesObj = {
+                    company_id: Store.companySelectedReducer.result.company_id,
+                    full_name: textSearch
+                }
+                dispatch(setClearSelectUser());
+                dispatch(checkJWTTOKENAction(history, Store));
+                dispatch(GetCompanyListAllAction(history, valuesObj, authStore));
+            } else {
+                history.push("/admin/user-edit-info-select");
             }
-            dispatch(checkJWTTOKENAction(history, Store));
-            dispatch(GetCompanyAllAction(history, valuesObj, authStore));
-            dispatch(setClearSelectCompany());
+
         }
     }
     //---------------On Search Click
@@ -87,9 +92,11 @@ function UserAddSelectCompany() {
     }
     //--------------Show Modal Edit
     function onShowModal(event) {
-        const company_id = event.target.getAttribute("company_id")
-        dispatch(setSelectCompanySuccess({ company_id }));
-        history.push("/admin/user-add")
+        const employee_id = event.target.getAttribute("employee_id")
+        if(employee_id){
+            dispatch(setSelectUserSuccess({employee_id}))
+            history.push("/admin/user-edit-info")
+        }
     }
 
     //----------------------------------------------------
@@ -99,13 +106,13 @@ function UserAddSelectCompany() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อสร้าง User</h4>
-                            <p className={classes.cardCategoryWhite}>Select company for create user</p>
+                            <h4 className={classes.cardTitleWhite}>เลือก User เพื่อแก้ไขข้อมูล</h4>
+                            <p className={classes.cardCategoryWhite}>Select user for edit information</p>
                         </CardHeader>
 
                         <CardBody>
                             <ButtonSearch
-                                placeholder="รหัสโครงการ/ชื่อโครงการ"
+                                placeholder="ชื่อ/นามสกุล"
                                 searchFunc={e => onSearchClick(e)}
                             />
                             <br></br>
@@ -116,52 +123,52 @@ function UserAddSelectCompany() {
                                             <TableCell style={{ width: 80, ...styleTableHeader }} align="left">
                                             </TableCell>
                                             <TableCell style={{ width: 160, ...styleTableHeader }} align="left">
-                                                {headerTable.company_code}
+                                                {userHeaderTable.username}
                                             </TableCell>
                                             <TableCell style={{ ...styleTableHeader }}>
-                                                {headerTable.company_name}
+                                                {userHeaderTable.first_name_th}
+                                            </TableCell>
+                                            <TableCell style={{ ...styleTableHeader }}>
+                                                {userHeaderTable.last_name_th}
                                             </TableCell>
                                             <TableCell style={{ width: 120, ...styleTableHeader }} align="left">
-                                                {headerTable.company_promotion}
-                                            </TableCell>
-                                            <TableCell style={{ width: 120, ...styleTableHeader }} align="left">
-                                                {headerTable.status}
+                                                {userHeaderTable.employee_privilege_type}
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {(rowsPerPage > 0
-                                            ? Store.companyGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : Store.companyGetAllReducer.result
+                                            ? Store.userListGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            : Store.userListGetAllReducer.result
                                         ).map((row) => (
-                                            <TableRow key={row.company_id ? row.company_id : '0'}>
+                                            <TableRow key={row.employee_id ? row.employee_id : '0'}>
                                                 <TableCell style={{ width: 80 }} align="left">
                                                     <div className={classes2.tableRowBtn}>
                                                         <Button
                                                             variant="contained"
                                                             color="primary"
                                                             size="small"
-                                                            className={classesModal.btnSelect}
-                                                            endIcon={<Icon company_id={row.company_id} company_name={row.company_name}>pin_end</Icon>}
-                                                            company_id={row.company_id}
+                                                            className={classes.button}
+                                                            endIcon={<Icon employee_id={row.employee_id}>create</Icon>}
+                                                            employee_id={row.employee_id}
                                                             onClick={onShowModal}
                                                         >
-                                                            <span company_id={row.company_id}>เลือก</span>
+                                                            <span employee_id={row.employee_id}>แก้ไข</span>
                                                         </Button><br></br>
 
                                                     </div>
                                                 </TableCell>
                                                 <TableCell style={{ width: 160 }} align="left">
-                                                    {row.company_code ? row.company_code : ''}
+                                                    {row.username ? row.username : ''}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {row.company_name ? row.company_name : ''}
+                                                    {row.first_name_th ? row.first_name_th : ''}
+                                                </TableCell>
+                                                <TableCell component="th" scope="row">
+                                                    {row.last_name_th ? row.last_name_th : ''}
                                                 </TableCell>
                                                 <TableCell style={{ width: 120 }} align="left">
-                                                    {row.company_promotion ? row.company_promotion : ''}
-                                                </TableCell>
-                                                <TableCell style={{ width: 120 }} align="left">
-                                                    {row.status ? row.status : ''}
+                                                    {row.employee_privilege_type ? row.employee_privilege_type : ''}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -176,7 +183,7 @@ function UserAddSelectCompany() {
                                             <TablePagination
                                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                                 colSpan={3}
-                                                count={Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result.length : 0}
+                                                count={Store.userListGetAllReducer.result ? Store.userListGetAllReducer.result.length : 0}
                                                 rowsPerPage={rowsPerPage}
                                                 page={page}
                                                 SelectProps={{
@@ -202,11 +209,10 @@ function UserAddSelectCompany() {
 }
 
 
-const mapStateToProps = ({ mainReducer, companyGetAllReducer }) => ({ mainReducer, companyGetAllReducer })
+const mapStateToProps = ({ mainReducer, userListGetAllReducer }) => ({ mainReducer, userListGetAllReducer })
 
 const mapDispatchToProps = {
-    GetCompanyAllAction,
-    checkJWTTOKENAction,
-    setSelectCompanySuccess
+    GetCompanyListAllAction,
+    checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserAddSelectCompany);
+export default connect(mapStateToProps, mapDispatchToProps)(UserEditList);
