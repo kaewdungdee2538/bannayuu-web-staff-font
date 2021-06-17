@@ -13,29 +13,29 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter"
 import Icon from '@material-ui/core/Icon';
 import CardIcon from "components/Card/CardIcon.js";
-import SelectBox from "components/Select/SelectBox"
 import Label from "components/Label/Label"
 import InputFile from "components/Input/InputFile"
 import CustomInput from "components/CustomInput/CustomInput.js";
+import UserChangeCompanyModal from "views/user/change-main-company/User-change-company-modal"
 import { checkJWTTOKENAction } from "actions/main/main.action"
-import { GetPrivilegeAllAction } from "actions/privilege/privilege-all.action"
 import { GetUserByID } from "actions/user/user-get-info.action"
-import { ChangePrivilegeUserAction } from "actions/user/user-change-privilege.action"
+import { ChangeMainCompanyUserAction } from "actions/user/user-change-main-company.action"
 import swal from 'sweetalert';
 import {
-    MESSAGE_NOT_SELECT_PRIVILEGE,
     MESSAGE_COMPANY_ID_NOTFOUND,
     MESSAGE_REMARK_SPECIAL,
     MESSAGE_REMARK_NOT_FOUND,
     MESSAGE_NOTSELECTIMAGE,
     MESSAGE_FILE_IMAGE_INVALID,
+    MESSAGE_SELECT_NEW_COMPANY_DUPLICATE_OLD_COMPANY,
+    MESSAGE_NOT_SELECT_NEW_COMPANY,
 } from "constants/message.constant"
 import { IsHomeProbitSpecial } from "utils/formatCharacter.util"
 import { getExtension, isImage } from "utils/funcImage.utils"
 
 const useStyles = makeStyles(styles);
 
-function UserChangePrivilege() {
+function UserChangeCompany() {
     const history = useHistory();
     const classes = useStyles();
     // const classesBtn = buttonStyle();
@@ -49,9 +49,10 @@ function UserChangePrivilege() {
     const [messageErr, setMessageErr] = useState({
         privilege: ""
     })
-    const [selectPrivilege, setSelectPrivilege] = useState("");
     const [image, setImage] = useState(null)
     const [remark, setRemark] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [selectNewCompany, setSelectNewCompany] = useState({ company_id: "", company_code: "", company_name: "" });
     //-----------------Form load
     useEffect(() => {
         loadMainForm();
@@ -63,12 +64,11 @@ function UserChangePrivilege() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-change-privilege-select");
+            history.push("/admin/user-change-company-select");
         } else if (!userStore) {
-            history.push("/admin/user-change-privilege-list");
+            history.push("/admin/user-change-company-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
-            dispatch(GetPrivilegeAllAction(history, authStore))
             const valuesObj = {
                 company_id: companyStore.company_id,
                 employee_id: userStore.employee_id
@@ -76,56 +76,50 @@ function UserChangePrivilege() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(() => {
-                    history.push("/admin/user-change-privilege-list");
+                    history.push("/admin/user-change-company-list");
                 })
             } else {
                 const result = getData.result;
                 setUserInfo({
                     username: result.username,
-                    first_name: result.first_name_th,
-                    last_name: result.last_name_th,
+                    first_name:result.first_name_th,
+                    last_name:result.last_name_th,
                     privilege: result.employee_privilege_id,
                 })
-                setSelectPrivilege(result.employee_privilege_id)
+
             }
         }
     }
-    const privilegeItems = Store.privilegeGetAllReducer.result.map(item => {
-        return {
-            key: item.employee_privilege_type,
-            value: item.employee_privilege_id,
-            text: item.employee_privilege_name_th
-        }
-    })
 
     //-----------------------On Create Click
-    function onChangePrivilegeClick() {
+    function onChangeMainCompanyClick() {
         const company_id = parseInt(Store.companySelectedReducer.result.company_id)
         const employee_id = parseInt(Store.userSelectReducer.result.employee_id)
-        const employee_type = Store.privilegeGetAllReducer.result.filter(item => { return item.employee_privilege_id == selectPrivilege }).map(item => {
-            return item.employee_privilege_type
-        })
+
         const valuesObj = {
             image,
-            employee_privilege_id: selectPrivilege.toString(),
             remark,
-            employee_type: employee_type[0],
-            company_id: company_id.toString(),
+            old_company_id: company_id.toString(),
+            new_company_id: selectNewCompany.company_id.toString(),
             employee_id: employee_id.toString()
         }
-        if (changePrivilegeUserMiddleware(valuesObj)) {
-            dispatch(ChangePrivilegeUserAction(history, valuesObj, Store.loginReducer.result));
+        if (changeMainCompanyUserMiddleware(valuesObj)) {
+            dispatch(ChangeMainCompanyUserAction(history, valuesObj, Store.loginReducer.result));
         }
     }
     //-----------------------Middleware for Create 
-    function changePrivilegeUserMiddleware(valuesObj) {
+    function changeMainCompanyUserMiddleware(valuesObj) {
         resetTextError();
-        if (!valuesObj.company_id) {
+        if (!valuesObj.old_company_id) {
             swal("Warning!", MESSAGE_COMPANY_ID_NOTFOUND, "warning");
             return false;
-        } else if (!valuesObj.employee_privilege_id) {
-            swal("Warning!", MESSAGE_NOT_SELECT_PRIVILEGE, "warning");
-            setMessageErr({ ...messageErr, privilege: MESSAGE_NOT_SELECT_PRIVILEGE })
+        } else if (!valuesObj.new_company_id) {
+            swal("Warning!", MESSAGE_NOT_SELECT_NEW_COMPANY, "warning");
+            setMessageErr({ ...messageErr, new_company: MESSAGE_NOT_SELECT_NEW_COMPANY })
+            return false;
+        } else if (valuesObj.old_company_id == valuesObj.new_company_id) {
+            swal("Warning!", MESSAGE_SELECT_NEW_COMPANY_DUPLICATE_OLD_COMPANY, "warning");
+            setMessageErr({ ...messageErr, new_company: MESSAGE_SELECT_NEW_COMPANY_DUPLICATE_OLD_COMPANY })
             return false;
         } else if (!valuesObj.image) {
             swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
@@ -153,15 +147,24 @@ function UserChangePrivilege() {
             remark: "",
         })
     }
+    //--------------------------Modal
+    function onShowModal() {
+        setShowModal(true)
+    }
     //----------------------------------------------------
     return (
         <div>
+            <UserChangeCompanyModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                setSelectNewCompany={setSelectNewCompany}
+            />
             <GridContainer>
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>เปลี่ยนแปลงสิทธิ์เข้าใช้งานระบบ</h4>
-                            <p className={classes.cardCategoryWhite}>Change Privilege</p>
+                            <h4 className={classes.cardTitleWhite}>เปลี่ยนแปลงโครงการหลักที่ดูแลอยู่ในปัจจุบัน</h4>
+                            <p className={classes.cardCategoryWhite}>Change main company</p>
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
@@ -190,14 +193,31 @@ function UserChangePrivilege() {
                                         </CardHeader>
                                         <CardBody>
                                             <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <SelectBox
-                                                        title="เลือกสิทธิ์การเข้าใช้งาน"
-                                                        value={selectPrivilege}
-                                                        setValue={setSelectPrivilege}
-                                                        items={privilegeItems}
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <Label
+                                                        title="โครงการหลักที่ดูแลปัจจุบัน"
+                                                        value={Store.companySelectedReducer.result ? Store.companySelectedReducer.result.company_name : ""}
                                                     />
-                                                    <span style={{ color: "red" }}>{messageErr.privilege}</span>
+                                                </GridItem>
+                                            </GridContainer>
+                                            <br></br>
+                                            <GridContainer>
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <Label
+                                                        title="โครงการหลักที่ดูแล (ใหม่)"
+                                                        value={selectNewCompany.company_name}
+                                                    />
+                                                    <br></br>
+                                                    <span style={{ color: "red" }}>{messageErr.new_company}</span>
+                                                </GridItem>
+                                            </GridContainer>
+                                            <br></br>
+                                            <GridContainer>
+                                                <GridItem xs={12} sm={12} md={12} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                                    <Button color="info"
+                                                        onClick={onShowModal}
+                                                        endIcon={<Icon style={{ fontSize: "25px" }}>flip_camera_android</Icon>}
+                                                    >เลือกโครงการใหม่</Button>
                                                 </GridItem>
                                             </GridContainer>
                                         </CardBody>
@@ -207,7 +227,7 @@ function UserChangePrivilege() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <InputFile
-                                        title="เลือกรูปภาพหลักฐานการแจ้งเปลี่ยนสิทธิ์เข้าใช้งานของ User"
+                                        title="เลือกรูปภาพหลักฐานการแจ้งเปลี่ยนโครงการหลักที่ User ดูแลอยู่ปัจจุบัน"
                                         setValue={setImage}
                                     />
                                     <span style={{ color: "red" }}>{messageErr.image}</span>
@@ -216,7 +236,7 @@ function UserChangePrivilege() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
-                                        labelText="เหตุผลที่เปลี่ยนสิทธิ์การเข้าใช้งานระบบ"
+                                        labelText="เหตุผลที่เปลี่ยนโครงการหลักที่ User ดูแลอยู่ปัจจุบัน"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
@@ -244,7 +264,7 @@ function UserChangePrivilege() {
                         </CardBody>
                         <CardFooter>
                             <Button color="primary"
-                                onClick={onChangePrivilegeClick}
+                                onClick={onChangeMainCompanyClick}
                                 endIcon={<Icon style={{ fontSize: "25px" }}>save</Icon>}
                             >บันทึก</Button>
                         </CardFooter>
@@ -256,12 +276,11 @@ function UserChangePrivilege() {
 }
 
 
-const mapStateToProps = ({ mainReducer, privilegeGetAllReducer }) => ({ mainReducer, privilegeGetAllReducer })
+const mapStateToProps = ({ mainReducer }) => ({ mainReducer })
 
 const mapDispatchToProps = {
     checkJWTTOKENAction,
-    GetPrivilegeAllAction,
     GetUserByID,
-    ChangePrivilegeUserAction
+    ChangeMainCompanyUserAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserChangePrivilege);
+export default connect(mapStateToProps, mapDispatchToProps)(UserChangeCompany);

@@ -28,6 +28,12 @@ import UserEditInfo from "views/user/edit-info/User-edit-info"
 import UserChangePrivilegeSelectCompany from "views/user/change-privilege/User-change-privilege-select-company"
 import UserChangePrivilegeList from "views/user/change-privilege/User-change-privilege-list"
 import UserChangePrivilege from "views/user/change-privilege/User-change-privilege"
+import UserChangeComapnySelectCompany from "views/user/change-main-company/User-change-company-select-company"
+import UserChangeCompanyList from "views/user/change-main-company/User-change-company-list"
+import UserChangeCompany from "views/user/change-main-company/User-change-company"
+import UserAddOrDeleteListComapnySelectCompany from "views/user/addordelete-companylist/User-addordelete-listcompany-select-company"
+import UserAddOrDeleteListCompanyList from "views/user/addordelete-companylist/User-addordelete-listcompany-list"
+import UserAddOrDeleteListCompany from "views/user/addordelete-companylist/User-addordelete-listcompany"
 // core components/views for RTL layout
 
 const secondRoutes = [
@@ -78,6 +84,30 @@ const secondRoutes = [
   },{
     path: "/user-change-privilege",
     component: UserChangePrivilege,
+    layout: "/admin",
+  },{
+    path: "/user-change-company-select",
+    component: UserChangeComapnySelectCompany,
+    layout: "/admin",
+  },{
+    path: "/user-change-company-list",
+    component: UserChangeCompanyList,
+    layout: "/admin",
+  },{
+    path: "/user-change-company",
+    component: UserChangeCompany,
+    layout: "/admin",
+  },{
+    path: "/user-addordelete-listcompany-select",
+    component: UserAddOrDeleteListComapnySelectCompany,
+    layout: "/admin",
+  },{
+    path: "/user-addordelete-listcompany-list",
+    component: UserAddOrDeleteListCompanyList,
+    layout: "/admin",
+  }, {
+    path: "/user-addordelete-listcompany",
+    component: UserAddOrDeleteListCompany,
     layout: "/admin",
   },
   

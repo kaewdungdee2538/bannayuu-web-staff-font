@@ -13,17 +13,16 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter"
 import Icon from '@material-ui/core/Icon';
 import CardIcon from "components/Card/CardIcon.js";
-import SelectBox from "components/Select/SelectBox"
+import TransferList from "components/TransferList/TransferList"
 import Label from "components/Label/Label"
 import InputFile from "components/Input/InputFile"
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { checkJWTTOKENAction } from "actions/main/main.action"
-import { GetPrivilegeAllAction } from "actions/privilege/privilege-all.action"
+import { GetCompanyListAllAction } from "actions/company/company-list.action"
 import { GetUserByID } from "actions/user/user-get-info.action"
-import { ChangePrivilegeUserAction } from "actions/user/user-change-privilege.action"
+import { AddOrDeleteCompanyListUserAction } from "actions/user/user-addordelete.action"
 import swal from 'sweetalert';
 import {
-    MESSAGE_NOT_SELECT_PRIVILEGE,
     MESSAGE_COMPANY_ID_NOTFOUND,
     MESSAGE_REMARK_SPECIAL,
     MESSAGE_REMARK_NOT_FOUND,
@@ -35,7 +34,7 @@ import { getExtension, isImage } from "utils/funcImage.utils"
 
 const useStyles = makeStyles(styles);
 
-function UserChangePrivilege() {
+function UserAddOrDeleteListCompany() {
     const history = useHistory();
     const classes = useStyles();
     // const classesBtn = buttonStyle();
@@ -44,14 +43,15 @@ function UserChangePrivilege() {
     //-----------------state
     const [userInfo, setUserInfo] = useState({
         username: "",
-        privilege: ""
+        company_list: null
     })
     const [messageErr, setMessageErr] = useState({
-        privilege: ""
+        companylist: ""
     })
-    const [selectPrivilege, setSelectPrivilege] = useState("");
     const [image, setImage] = useState(null)
     const [remark, setRemark] = useState("");
+    const [companyListItemRight, setCompanyListItemRight] = useState([]);
+    const [companyListItemLeft, setCompanyListItemLeft] = useState([]);
     //-----------------Form load
     useEffect(() => {
         loadMainForm();
@@ -63,12 +63,12 @@ function UserChangePrivilege() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-change-privilege-select");
+            history.push("/admin/user-addordelete-listcompany-select");
         } else if (!userStore) {
-            history.push("/admin/user-change-privilege-list");
+            history.push("/admin/user-addordelete-listcompany-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
-            dispatch(GetPrivilegeAllAction(history, authStore))
+            dispatch(GetCompanyListAllAction(history, authStore))
             const valuesObj = {
                 company_id: companyStore.company_id,
                 employee_id: userStore.employee_id
@@ -76,56 +76,64 @@ function UserChangePrivilege() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(() => {
-                    history.push("/admin/user-change-privilege-list");
+                    history.push("/admin/user-addordelete-listcompany-list");
                 })
             } else {
                 const result = getData.result;
+                const company_list = JSON.parse(result.company_list)
                 setUserInfo({
                     username: result.username,
-                    first_name: result.first_name_th,
-                    last_name: result.last_name_th,
-                    privilege: result.employee_privilege_id,
+                    first_name:result.first_name_th,
+                    last_name:result.last_name_th,
+                    company_list,
                 })
-                setSelectPrivilege(result.employee_privilege_id)
+
             }
         }
     }
-    const privilegeItems = Store.privilegeGetAllReducer.result.map(item => {
-        return {
-            key: item.employee_privilege_type,
-            value: item.employee_privilege_id,
-            text: item.employee_privilege_name_th
-        }
-    })
+    if (Store.companyListGetAllReducer.result.length > 0 && companyListItemLeft.length === 0 && companyListItemRight.length === 0 && userInfo.company_list) {
+        const company_list_from_get = userInfo.company_list ? userInfo.company_list : [];
+
+        const company_list_right = company_list_from_get.map((comList) => {
+            const comp_list = Store.companyListGetAllReducer.result.map(item => {
+                return { value: item.company_name, id: item.company_id }
+            }).filter(fil => fil.id == comList)
+            return comp_list[0];
+        }).filter(fil => fil.id != Store.companySelectedReducer.result.company_id)
+
+        const company_list_left = Store.companyListGetAllReducer.result.map(item => {
+            return { value: item.company_name, id: item.company_id }
+        }).filter(function (fil) {
+            return company_list_from_get.indexOf(fil.id) < 0
+        })
+
+
+        setCompanyListItemRight(company_list_right);
+        setCompanyListItemLeft(company_list_left);
+    }
 
     //-----------------------On Create Click
-    function onChangePrivilegeClick() {
+    function onChangeAddOrDeleteCompanyListClick() {
         const company_id = parseInt(Store.companySelectedReducer.result.company_id)
         const employee_id = parseInt(Store.userSelectReducer.result.employee_id)
-        const employee_type = Store.privilegeGetAllReducer.result.filter(item => { return item.employee_privilege_id == selectPrivilege }).map(item => {
-            return item.employee_privilege_type
-        })
+        const company_list_right = companyListItemRight.map(item => item.id)
+        const company_list = [company_id, ...company_list_right]
         const valuesObj = {
             image,
-            employee_privilege_id: selectPrivilege.toString(),
+            company_list: JSON.stringify(company_list),
             remark,
-            employee_type: employee_type[0],
             company_id: company_id.toString(),
             employee_id: employee_id.toString()
         }
-        if (changePrivilegeUserMiddleware(valuesObj)) {
-            dispatch(ChangePrivilegeUserAction(history, valuesObj, Store.loginReducer.result));
+        if (addOrDeleteCompanyListUserMiddleware(valuesObj)) {
+            dispatch(AddOrDeleteCompanyListUserAction(history, valuesObj, Store.loginReducer.result));
         }
     }
     //-----------------------Middleware for Create 
-    function changePrivilegeUserMiddleware(valuesObj) {
+    function addOrDeleteCompanyListUserMiddleware(valuesObj) {
         resetTextError();
         if (!valuesObj.company_id) {
             swal("Warning!", MESSAGE_COMPANY_ID_NOTFOUND, "warning");
-            return false;
-        } else if (!valuesObj.employee_privilege_id) {
-            swal("Warning!", MESSAGE_NOT_SELECT_PRIVILEGE, "warning");
-            setMessageErr({ ...messageErr, privilege: MESSAGE_NOT_SELECT_PRIVILEGE })
             return false;
         } else if (!valuesObj.image) {
             swal("Warning!", MESSAGE_NOTSELECTIMAGE, "warning");
@@ -160,8 +168,8 @@ function UserChangePrivilege() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>เปลี่ยนแปลงสิทธิ์เข้าใช้งานระบบ</h4>
-                            <p className={classes.cardCategoryWhite}>Change Privilege</p>
+                            <h4 className={classes.cardTitleWhite}>เพิ่ม/ลด โครงการในการดูแลของผู้ใช้งาน</h4>
+                            <p className={classes.cardCategoryWhite}>Add/delete company list</p>
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
@@ -190,14 +198,19 @@ function UserChangePrivilege() {
                                         </CardHeader>
                                         <CardBody>
                                             <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <SelectBox
-                                                        title="เลือกสิทธิ์การเข้าใช้งาน"
-                                                        value={selectPrivilege}
-                                                        setValue={setSelectPrivilege}
-                                                        items={privilegeItems}
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <h4 style={{ textAlign: "center" }}>เลือกโครงการที่ดูแลเพิ่มเติม</h4>
+                                                </GridItem>
+                                                <br></br>
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                    <TransferList
+                                                        titleLeft="โครงการที่ยังไม่เลือก"
+                                                        titleRight="โครงการที่ถูกเลือก"
+                                                        leftItems={companyListItemLeft}
+                                                        setLeftItems={setCompanyListItemLeft}
+                                                        rightItems={companyListItemRight}
+                                                        setRightItems={setCompanyListItemRight}
                                                     />
-                                                    <span style={{ color: "red" }}>{messageErr.privilege}</span>
                                                 </GridItem>
                                             </GridContainer>
                                         </CardBody>
@@ -207,7 +220,7 @@ function UserChangePrivilege() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <InputFile
-                                        title="เลือกรูปภาพหลักฐานการแจ้งเปลี่ยนสิทธิ์เข้าใช้งานของ User"
+                                        title="เลือกรูปภาพหลักฐานการแจ้งเปลี่ยนแปลงโครงการที่ผู้ใช้งานดูแล"
                                         setValue={setImage}
                                     />
                                     <span style={{ color: "red" }}>{messageErr.image}</span>
@@ -216,7 +229,7 @@ function UserChangePrivilege() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
-                                        labelText="เหตุผลที่เปลี่ยนสิทธิ์การเข้าใช้งานระบบ"
+                                        labelText="เหตุผลที่เปลี่ยนแปลงโครงการที่ผู้ใช้งานดูแล"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
@@ -244,7 +257,7 @@ function UserChangePrivilege() {
                         </CardBody>
                         <CardFooter>
                             <Button color="primary"
-                                onClick={onChangePrivilegeClick}
+                                onClick={onChangeAddOrDeleteCompanyListClick}
                                 endIcon={<Icon style={{ fontSize: "25px" }}>save</Icon>}
                             >บันทึก</Button>
                         </CardFooter>
@@ -256,12 +269,12 @@ function UserChangePrivilege() {
 }
 
 
-const mapStateToProps = ({ mainReducer, privilegeGetAllReducer }) => ({ mainReducer, privilegeGetAllReducer })
+const mapStateToProps = ({ mainReducer, companyListGetAllReducer }) => ({ mainReducer, companyListGetAllReducer })
 
 const mapDispatchToProps = {
     checkJWTTOKENAction,
-    GetPrivilegeAllAction,
+    GetCompanyListAllAction,
     GetUserByID,
-    ChangePrivilegeUserAction
+    AddOrDeleteCompanyListUserAction,
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserChangePrivilege);
+export default connect(mapStateToProps, mapDispatchToProps)(UserAddOrDeleteListCompany);

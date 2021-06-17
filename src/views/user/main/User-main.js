@@ -45,7 +45,12 @@ function UserMain() {
     function onChangePrivilegeClick() {
         history.push("/admin/user-change-privilege-select")
     }
-
+    function onChangeCompanySelect() {
+        history.push("/admin/user-change-company-select")
+    }
+    function onAddOrDeleteCompanyList() {
+        history.push("/admin/user-addordelete-listcompany-select")
+    }
     //----------------------------------------------------
     return (
         <div>
@@ -91,10 +96,11 @@ function UserMain() {
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Button
+                                        onClick={onChangeCompanySelect}
                                         className={classesBtn.btnEdit}
                                         endIcon={<Icon style={{ fontSize: "30px" }}>storefront</Icon>}
                                     >
-                                        เปลี่ยนโครงการหลักที่ผู้ใช้งานอยู่ปัจจุบัน
+                                        เปลี่ยนโครงการหลักที่ผู้ใช้งานอยู่ในปัจจุบัน
                                     </Button>
                                 </GridItem>
                             </GridContainer>
@@ -102,6 +108,7 @@ function UserMain() {
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Button
+                                        onClick={onAddOrDeleteCompanyList}
                                         className={classesBtn.btnAdd}
                                         endIcon={<Icon style={{ fontSize: "30px" }}>add_business</Icon>}
                                     >

@@ -79,7 +79,9 @@ function UserEditInfo() {
             }
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
-                swal("Warning!", getData.message, "warning");
+                swal("Warning!", getData.message, "warning").then(()=>{
+                    history.push("/admin/user-edit-list");
+                })
             } else {
                 const result = getData.result;
                 setUserInfo({

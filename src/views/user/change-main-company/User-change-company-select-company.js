@@ -1,5 +1,6 @@
 import { styles } from "views/Company/Add/Company-style"
 import { makeStyles } from "@material-ui/core/styles";
+import { modalStyle } from 'utils/modalStyle.utils'
 import { connect } from 'react-redux';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -15,55 +16,49 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableHead from '@material-ui/core/TableHead'
+import TableCustom from "components/Table/TableCustom"
 import Paper from '@material-ui/core/Paper';
 import { useState, useEffect } from 'react'
-import TableCustom from "components/Table/TableCustom"
 import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
-import { GetCompanyListAllAction } from "actions/user/user-get-list.action"
-import { setSelectUserSuccess,setClearSelectUser } from 'actions/user/user-select.action'
-import { userHeaderTable } from 'views/user/data/User.data'
+import { GetCompanyAllAction } from "actions/company/company-edit.action"
+import { headerTable } from 'views/Company/Edit/data/Company-edit-data'
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
 import { editCompantStyle } from "views/Company/Edit/Company-edit-style"
+import { setSelectCompanySuccess, setClearSelectCompany } from "actions/company/company-selected.action"
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(editCompantStyle);
-function UserChangePrivilegeList() {
+function UserChangeComapnySelectCompany() {
     const classes = useStyles();
     const classes2 = useStyles2();
+    const classesModal = modalStyle();
     const Store = useSelector(store => store);
     const dispatch = useDispatch();
     const history = useHistory();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const emptyRows = calEmptyRows(Store.userListGetAllReducer.result ? Store.userListGetAllReducer.result : 0);
-
+    const emptyRows = calEmptyRows(Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result : 0);
+    
     //---------------------on load
     useEffect(() => {
         loadCompanyEditForm();
     }, []);
     async function loadCompanyEditForm(textSearch) {
         const authStore = Store.loginReducer.result;
-        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
-            if (Store.companySelectedReducer.result) {
-                const valuesObj = {
-                    company_id: Store.companySelectedReducer.result.company_id,
-                    full_name: textSearch
-                }
-                dispatch(setClearSelectUser());
-                dispatch(checkJWTTOKENAction(history, Store));
-                dispatch(GetCompanyListAllAction(history, valuesObj, authStore));
-            } else {
-                history.push("/admin/user-change-privilege-select");
+            const valuesObj = {
+                company_code_or_name: textSearch
             }
-
+            dispatch(checkJWTTOKENAction(history, Store));
+            dispatch(GetCompanyAllAction(history, valuesObj, authStore));
+            dispatch(setClearSelectCompany());
         }
     }
     //---------------On Search Click
@@ -92,10 +87,11 @@ function UserChangePrivilegeList() {
     }
     //--------------Show Modal Edit
     function onShowModal(event) {
-        const employee_id = event.target.getAttribute("employee_id")
-        if(employee_id){
-            dispatch(setSelectUserSuccess({employee_id}))
-            history.push("/admin/user-change-privilege")
+        const company_id = event.target.getAttribute("company_id")
+        const company_name = event.target.getAttribute("company_name")
+        if (company_id) {
+            dispatch(setSelectCompanySuccess({ company_id,company_name }));
+            history.push("/admin/user-change-company-list")
         }
     }
 
@@ -106,13 +102,13 @@ function UserChangePrivilegeList() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                        <h4 className={classes.cardTitleWhite}>เลือก User เพื่อเปลี่ยนแปลงสิทธิ์การใช้งานระบบ</h4>
-                            <p className={classes.cardCategoryWhite}>Select user for change privilege</p>
+                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อเข้าไปเปลี่ยนแปลงโครงการหลักที่ User ดูแลอยู่</h4>
+                            <p className={classes.cardCategoryWhite}>Select company for change main company</p>
                         </CardHeader>
 
                         <CardBody>
                             <ButtonSearch
-                                placeholder="ชื่อ/นามสกุล"
+                                placeholder="รหัสโครงการ/ชื่อโครงการ"
                                 searchFunc={e => onSearchClick(e)}
                             />
                             <br></br>
@@ -123,52 +119,53 @@ function UserChangePrivilegeList() {
                                             <TableCell style={{ width: 80, ...styleTableHeader }} align="left">
                                             </TableCell>
                                             <TableCell style={{ width: 160, ...styleTableHeader }} align="left">
-                                                {userHeaderTable.username}
+                                                {headerTable.company_code}
                                             </TableCell>
                                             <TableCell style={{ ...styleTableHeader }}>
-                                                {userHeaderTable.first_name_th}
-                                            </TableCell>
-                                            <TableCell style={{ ...styleTableHeader }}>
-                                                {userHeaderTable.last_name_th}
+                                                {headerTable.company_name}
                                             </TableCell>
                                             <TableCell style={{ width: 120, ...styleTableHeader }} align="left">
-                                                {userHeaderTable.employee_privilege_type}
+                                                {headerTable.company_promotion}
+                                            </TableCell>
+                                            <TableCell style={{ width: 120, ...styleTableHeader }} align="left">
+                                                {headerTable.status}
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {(rowsPerPage > 0
-                                            ? Store.userListGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : Store.userListGetAllReducer.result
+                                            ? Store.companyGetAllReducer.result.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            : Store.companyGetAllReducer.result
                                         ).map((row) => (
-                                            <TableRow key={row.employee_id ? row.employee_id : '0'}>
+                                            <TableRow key={row.company_id ? row.company_id : '0'}>
                                                 <TableCell style={{ width: 80 }} align="left">
                                                     <div className={classes2.tableRowBtn}>
                                                         <Button
                                                             variant="contained"
                                                             color="primary"
                                                             size="small"
-                                                            className={classes.button}
-                                                            endIcon={<Icon employee_id={row.employee_id}>create</Icon>}
-                                                            employee_id={row.employee_id}
+                                                            className={classesModal.btnSelect}
+                                                            endIcon={<Icon company_id={row.company_id} company_name={row.company_name}>pin_end</Icon>}
+                                                            company_id={row.company_id}
+                                                            company_name={row.company_name}
                                                             onClick={onShowModal}
                                                         >
-                                                            <span employee_id={row.employee_id}>แก้ไข</span>
+                                                            <span company_id={row.company_id }company_name={row.company_name}>เลือก</span>
                                                         </Button><br></br>
 
                                                     </div>
                                                 </TableCell>
                                                 <TableCell style={{ width: 160 }} align="left">
-                                                    {row.username ? row.username : ''}
+                                                    {row.company_code ? row.company_code : ''}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {row.first_name_th ? row.first_name_th : ''}
-                                                </TableCell>
-                                                <TableCell component="th" scope="row">
-                                                    {row.last_name_th ? row.last_name_th : ''}
+                                                    {row.company_name ? row.company_name : ''}
                                                 </TableCell>
                                                 <TableCell style={{ width: 120 }} align="left">
-                                                    {row.employee_privilege_type ? row.employee_privilege_type : ''}
+                                                    {row.company_promotion ? row.company_promotion : ''}
+                                                </TableCell>
+                                                <TableCell style={{ width: 120 }} align="left">
+                                                    {row.status ? row.status : ''}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -183,7 +180,7 @@ function UserChangePrivilegeList() {
                                             <TablePagination
                                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                                 colSpan={3}
-                                                count={Store.userListGetAllReducer.result ? Store.userListGetAllReducer.result.length : 0}
+                                                count={Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result.length : 0}
                                                 rowsPerPage={rowsPerPage}
                                                 page={page}
                                                 SelectProps={{
@@ -209,10 +206,11 @@ function UserChangePrivilegeList() {
 }
 
 
-const mapStateToProps = ({ mainReducer, userListGetAllReducer }) => ({ mainReducer, userListGetAllReducer })
+const mapStateToProps = ({ mainReducer, companyGetAllReducer }) => ({ mainReducer, companyGetAllReducer })
 
 const mapDispatchToProps = {
-    GetCompanyListAllAction,
-    checkJWTTOKENAction
+    GetCompanyAllAction,
+    checkJWTTOKENAction,
+    setSelectCompanySuccess
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserChangePrivilegeList);
+export default connect(mapStateToProps, mapDispatchToProps)(UserChangeComapnySelectCompany);

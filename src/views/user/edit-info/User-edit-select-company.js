@@ -102,7 +102,7 @@ function UserEditSelectCompany() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อแก้ไขข้อมูล User</h4>
+                            <h4 className={classes.cardTitleWhite}>เลือกโครงการเพื่อเข้าไปแก้ไขข้อมูล User</h4>
                             <p className={classes.cardCategoryWhite}>Select company for edit user information</p>
                         </CardHeader>
 

@@ -32,7 +32,7 @@ import { editCompantStyle } from "views/Company/Edit/Company-edit-style"
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(editCompantStyle);
-function UserChangePrivilegeList() {
+function UserChangeCompanyList() {
     const classes = useStyles();
     const classes2 = useStyles2();
     const Store = useSelector(store => store);
@@ -44,9 +44,9 @@ function UserChangePrivilegeList() {
 
     //---------------------on load
     useEffect(() => {
-        loadCompanyEditForm();
+        loadChangeCompanyForm();
     }, []);
-    async function loadCompanyEditForm(textSearch) {
+    async function loadChangeCompanyForm(textSearch) {
         const authStore = Store.loginReducer.result;
         console.log(authStore)
         if (!authStore) {
@@ -61,14 +61,14 @@ function UserChangePrivilegeList() {
                 dispatch(checkJWTTOKENAction(history, Store));
                 dispatch(GetCompanyListAllAction(history, valuesObj, authStore));
             } else {
-                history.push("/admin/user-change-privilege-select");
+                history.push("/admin/user-change-company-select");
             }
 
         }
     }
     //---------------On Search Click
     function onSearchClick(e) {
-        loadCompanyEditForm(e);
+        loadChangeCompanyForm(e);
     }
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -95,7 +95,7 @@ function UserChangePrivilegeList() {
         const employee_id = event.target.getAttribute("employee_id")
         if(employee_id){
             dispatch(setSelectUserSuccess({employee_id}))
-            history.push("/admin/user-change-privilege")
+            history.push("/admin/user-change-company")
         }
     }
 
@@ -106,8 +106,8 @@ function UserChangePrivilegeList() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader style={{ background: "linear-gradient(60deg, #007bff, #1e88e5)" }} color="primary">
-                        <h4 className={classes.cardTitleWhite}>เลือก User เพื่อเปลี่ยนแปลงสิทธิ์การใช้งานระบบ</h4>
-                            <p className={classes.cardCategoryWhite}>Select user for change privilege</p>
+                        <h4 className={classes.cardTitleWhite}>เลือก User เพื่อเปลี่ยนแปลงโครงการหลักที่ดูแลอยู่ปัจจุบัน</h4>
+                            <p className={classes.cardCategoryWhite}>Select user for change main company</p>
                         </CardHeader>
 
                         <CardBody>
@@ -215,4 +215,4 @@ const mapDispatchToProps = {
     GetCompanyListAllAction,
     checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserChangePrivilegeList);
+export default connect(mapStateToProps, mapDispatchToProps)(UserChangeCompanyList);
