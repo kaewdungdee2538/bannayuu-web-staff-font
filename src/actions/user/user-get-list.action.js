@@ -9,7 +9,7 @@ import {
     HTTP_GET_USER_LIST_CLEAR
 } from 'constants/constants.utils'
 
-import { MAIN_URL, GET_USER_LIST_ALL_API } from 'constants/api-route'
+import { MAIN_URL, GET_USER_IS_BELOW_MYSELF_ALL_API } from 'constants/api-route'
 import { httpClientGetMethodWithPost } from 'utils/httpClient.utils'
 
 
@@ -25,7 +25,7 @@ export const setClearUserListAll = () => ({
 export const GetCompanyListAllAction = (history,credential,  authStore) => {
     return async dispatch => {
             dispatch(setFetching());
-            const urlClient = `${MAIN_URL}${GET_USER_LIST_ALL_API}`
+            const urlClient = `${MAIN_URL}${GET_USER_IS_BELOW_MYSELF_ALL_API}`
             const valuesObj = { ...credential }
             const result = await httpClientGetMethodWithPost({ urlClient, valuesObj, authStore })
             if (result.error) {
@@ -34,7 +34,6 @@ export const GetCompanyListAllAction = (history,credential,  authStore) => {
                     history.goBack();
                 });
             } else {
-                console.log(result)
                 if (result.result)
                     dispatch(setGetUserListAllSuccess(result.result));
                 else

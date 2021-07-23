@@ -17,7 +17,7 @@ export const AddOrDeleteCompanyListUserAction = (history, credential, authStore)
                 swal("Success", result.message, "success")
                     .then(() => {
                         dispatch(setSuccess());
-                        history.push('/admin/user-addordelete-listcompany-list')
+                        history.push('/user-addordelete-listcompany-list')
                     });
             }
     }

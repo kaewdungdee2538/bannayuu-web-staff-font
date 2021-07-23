@@ -89,7 +89,7 @@ function UserAddSelectCompany() {
     function onShowModal(event) {
         const company_id = event.target.getAttribute("company_id")
         dispatch(setSelectCompanySuccess({ company_id }));
-        history.push("/admin/user-add")
+        history.push("/user-add")
     }
 
     //----------------------------------------------------

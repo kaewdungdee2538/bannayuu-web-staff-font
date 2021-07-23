@@ -63,9 +63,9 @@ function UserAddOrDeleteListCompany() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-addordelete-listcompany-select");
+            history.push("/user-addordelete-listcompany-select");
         } else if (!userStore) {
-            history.push("/admin/user-addordelete-listcompany-list");
+            history.push("/user-addordelete-listcompany-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetCompanyListAllAction(history, authStore))
@@ -76,7 +76,7 @@ function UserAddOrDeleteListCompany() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(() => {
-                    history.push("/admin/user-addordelete-listcompany-list");
+                    history.push("/user-addordelete-listcompany-list");
                 })
             } else {
                 const result = getData.result;

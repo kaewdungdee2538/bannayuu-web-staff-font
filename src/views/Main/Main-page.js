@@ -12,7 +12,6 @@ function MainPage() {
         loadMainForm();
     }, []);
     function loadMainForm() {
-        console.log('Load Mian')
         const valuesObj = authStore.loginReducer.result;
         if (!valuesObj) {
             history.push("/login");

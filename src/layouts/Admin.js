@@ -18,10 +18,10 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 // import imagine1 from "assets/img/sidebar-1.jpg";
 // import imagine2 from "assets/img/sidebar-2.jpg";
-import imagine3 from "assets/img/sidebar-3.jpg";
+import imagine3 from "./images/sidebar-3.jpg";
 // import imagine4 from "assets/img/sidebar-4.jpg";
 // import bgImage from "assets/img/sidebar-2.jpg";
-import logo from "assets/img/logo-big.svg";
+import logo from "./images/logo-big.svg";
 import PageLoading from "views/ErrorPage/PageLoading"
 import { useSelector } from 'react-redux'
 
@@ -31,7 +31,7 @@ let ps;
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -43,7 +43,7 @@ const switchRoutes = (
       return null;
     })}
     {secondRoutes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -54,7 +54,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/admin" to="/admin/dashboard" />
+    <Redirect from="/" to="/main" />
   </Switch>
 );
 
@@ -65,6 +65,7 @@ export default function Admin({ ...rest }) {
   const classes = useStyles();
   const authStore = useSelector(store => store);
   const mainStore = authStore.mainReducer;
+  const loginStore = authStore.loginReducer.result;
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -73,7 +74,7 @@ export default function Admin({ ...rest }) {
     setMobileOpen(!mobileOpen);
   };
   const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
+    return window.location.pathname !== "/maps";
   };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
@@ -119,6 +120,7 @@ export default function Admin({ ...rest }) {
         <Navbar
           color={"info"}
           routes={routes}
+          loginStore={loginStore}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />

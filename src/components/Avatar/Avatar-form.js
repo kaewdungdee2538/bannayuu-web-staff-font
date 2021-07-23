@@ -55,7 +55,6 @@ function AvatarForm(props) {
                 return classes.disableStatus;
         }
     }
-    console.log(getStyle(status))
     return (
         <div className={getStyle(status)}>
             {text}

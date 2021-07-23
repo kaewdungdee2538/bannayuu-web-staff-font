@@ -17,7 +17,7 @@ export const CreateUserAction = (history, credential, authStore) => {
                 swal("Success", result.message, "success")
                     .then(() => {
                         dispatch(setSuccess());
-                        history.push('/admin/user-add-select')
+                        history.push('/user-add-select')
                     });
             }
     }

@@ -17,7 +17,7 @@ export const ChangePrivilegeUserAction = (history, credential, authStore) => {
                 swal("Success", result.message, "success")
                     .then(() => {
                         dispatch(setSuccess());
-                        history.push('/admin/user-change-privilege-list')
+                        history.push('/user-change-privilege-list')
                     });
             }
     }

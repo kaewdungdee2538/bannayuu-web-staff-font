@@ -23,7 +23,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from "react-router-dom";
 import { checkJWTTOKENAction } from "actions/main/main.action"
 import { useSelector } from 'react-redux'
-import { GetCompanyAllAction } from "actions/company/company-edit.action"
+import { GetCompanyListAndNotCitCompanyAllAction } from "actions/company/company-list-not-cit-company.action"
 import { headerTable } from 'views/Company/Edit/data/Company-edit-data'
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -54,10 +54,10 @@ function UserChangeComapnySelectCompany() {
             history.push("/login");
         } else {
             const valuesObj = {
-                company_code_or_name: textSearch
+                company_code_or_name: textSearch ? textSearch : ""
             }
             dispatch(checkJWTTOKENAction(history, Store));
-            dispatch(GetCompanyAllAction(history, valuesObj, authStore));
+            dispatch(GetCompanyListAndNotCitCompanyAllAction(history, valuesObj, authStore));
             dispatch(setClearSelectCompany());
         }
     }
@@ -91,7 +91,7 @@ function UserChangeComapnySelectCompany() {
         const company_name = event.target.getAttribute("company_name")
         if (company_id) {
             dispatch(setSelectCompanySuccess({ company_id,company_name }));
-            history.push("/admin/user-change-company-list")
+            history.push("/user-change-company-list")
         }
     }
 
@@ -209,7 +209,7 @@ function UserChangeComapnySelectCompany() {
 const mapStateToProps = ({ mainReducer, companyGetAllReducer }) => ({ mainReducer, companyGetAllReducer })
 
 const mapDispatchToProps = {
-    GetCompanyAllAction,
+    GetCompanyListAndNotCitCompanyAllAction,
     checkJWTTOKENAction,
     setSelectCompanySuccess
 }

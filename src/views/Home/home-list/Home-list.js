@@ -54,7 +54,7 @@ function HomeList() {
             history.push("/login");
         } else {
             if (!Store.homeImportExcelReducer.result) {
-                history.push("/admin/home-main");
+                history.push("/home-main");
             } else {
                 const result = Store.homeImportExcelReducer.result
                 const valuesObj = {

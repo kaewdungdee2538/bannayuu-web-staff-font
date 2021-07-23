@@ -50,7 +50,6 @@ function UserChangePrivilegeSelectCompany() {
     }, []);
     async function loadCompanyEditForm(textSearch) {
         const authStore = Store.loginReducer.result;
-        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
@@ -91,7 +90,7 @@ function UserChangePrivilegeSelectCompany() {
         const company_id = event.target.getAttribute("company_id")
         if (company_id) {
             dispatch(setSelectCompanySuccess({ company_id }));
-            history.push("/admin/user-change-privilege-list")
+            history.push("/user-change-privilege-list")
         }
     }
 

@@ -23,7 +23,6 @@ const stypeLogoHeader = {
 const useStyles = makeStyles(styles);
 
 export default function Sidebar(props) {
-  console.log('render sidebar')
   const classes = useStyles();
   let location = useLocation();
   // verifies if routeName is the one active (in browser input)

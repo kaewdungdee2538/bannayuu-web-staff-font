@@ -28,13 +28,14 @@ export const ImportExcelVillagerAction = (history, credential, authStore) => {
         const urlClient = `${MAIN_URL}${IMPORT_EXCEL_VILLAGER_API}`
         const newCredential = { ...credential }
         let items = newCredential.data;
+        
         const newItems = items.map(item => {
             return {
                 home_address: item[0].value,
                 first_name: item[1].value,
                 last_name: item[2].value,
                 tel_number: item[3].value,
-                remark: item[4].value
+                remark: item[4] ? item[4].value : null
             }
         })
         const valuesObj = {

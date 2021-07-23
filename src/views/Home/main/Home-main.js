@@ -94,7 +94,7 @@ function HomeMain() {
         const company_name = event.target.getAttribute("company_name")
         if (company_id) {
             dispatch(setSelectCompanySuccess({ company_id, company_name }))
-            history.push("/admin/home-import");
+            history.push("/home-import");
         }
     }
     //--------------Modal edit

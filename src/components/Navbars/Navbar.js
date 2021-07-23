@@ -24,19 +24,23 @@ const useStyles = makeStyles(styles);
 export default function Header(props) {
   const classes = useStyles();
   const routeName = useRouteName();
-  const { color } = props;
+  const { color,loginStore } = props;
   const appBarClasses = classNames({
     [" " + classes[color]]: color,
   });
+  
   return (
     <AppBar className={classes.appBar + appBarClasses}>
+     
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
+      
           {/* Here we create navbar brand, based on route name */}
           <Button color="transparent" href="#" className={classes.title}>
             {routeName}
           </Button>
         </div>
+        <span>ผู้ใช้งาน {loginStore ? loginStore.first_name_th : ""}  {loginStore ? loginStore.last_name_th : ""}</span>
         <Hidden smDown implementation="css">
           {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
         </Hidden>

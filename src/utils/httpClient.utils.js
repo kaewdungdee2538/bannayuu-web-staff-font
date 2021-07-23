@@ -38,8 +38,6 @@ export const httpClientPOSTMethodNotAuth = async (props) => {
         ...valuesObj
     };
     const url = urlClient;
-    console.log(url)
-    console.log(valuesObj)
     try {
         const res = await axios.post(url, bodyParameters);
         return res.data;
@@ -62,8 +60,6 @@ export const httpClientPOSTMethodVerifyAuth = async (props) => {
         headers: { Authorization: `Bearer ${authStore.access_token}` }
     }
     const url = urlClient;
-    console.log(url)
-    console.log(valuesObj)
     try {
         const res = await axios.post(url, bodyParameters, config);
         return res.data;
@@ -84,11 +80,8 @@ export const httpClientPOSTMethodFormData = async (props) => {
         headers: { Authorization: `Bearer ${authStore.access_token}` }
     }
     const url = urlClient;
-    console.log(url)
-    console.log(valuesObj)
     //-------------Setup data to body form-data
     for (const [key, value] of Object.entries(valuesObj)) {
-        console.log(`${key}: ${value}`);
         bodyFormData.append(key, value)
     }
 

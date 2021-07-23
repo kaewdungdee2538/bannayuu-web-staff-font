@@ -37,7 +37,6 @@ export const GetVillagerAllAction = (history, credential, authStore) => {
                     history.goBack();
                 });
             } else {
-                console.log(result)
                 if (result.result)
                     dispatch(setGetVillagerAllSuccess(result.result));
                 else

@@ -34,7 +34,6 @@ export const GetCompanyListAllAction = (history,  authStore) => {
                     history.goBack();
                 });
             } else {
-                console.log(result)
                 if (result.result)
                     dispatch(setGetCompanyListAllSuccess(result.result));
                 else

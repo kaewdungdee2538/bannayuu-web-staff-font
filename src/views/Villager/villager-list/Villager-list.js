@@ -54,7 +54,7 @@ function VillagerList() {
             history.push("/login");
         } else {
             if (!Store.villagerImportExcelReducer.result) {
-                history.push("/admin/villager-main");
+                history.push("/villager-main");
             } else {
                 const result = Store.villagerImportExcelReducer.result
                 const valuesObj = {

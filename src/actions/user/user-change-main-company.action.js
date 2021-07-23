@@ -17,7 +17,7 @@ export const ChangeMainCompanyUserAction = (history, credential, authStore) => {
                 swal("Success", result.message, "success")
                     .then(() => {
                         dispatch(setSuccess());
-                        history.push('/admin/user-change-company-select')
+                        history.push('/user-change-company-select')
                     });
             }
     }

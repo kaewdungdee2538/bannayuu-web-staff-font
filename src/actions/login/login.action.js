@@ -33,7 +33,6 @@ export const loginAction = (history, credential) => {
         const urlClient = `${MAIN_URL}${LOGIN_API}`
         const valuesObj = { ...credential }
         const result = await httpClientPOSTMethodNotAuth({ urlClient, valuesObj })
-        console.log(result)
         if(result.error){
             dispatch(setLoginFailed());
             swal("Warning!", result.message, "warning");

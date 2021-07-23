@@ -64,9 +64,9 @@ function UserChangeCompany() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-change-company-select");
+            history.push("/user-change-company-select");
         } else if (!userStore) {
-            history.push("/admin/user-change-company-list");
+            history.push("/user-change-company-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
             const valuesObj = {
@@ -76,14 +76,14 @@ function UserChangeCompany() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(() => {
-                    history.push("/admin/user-change-company-list");
+                    history.push("/user-change-company-list");
                 })
             } else {
                 const result = getData.result;
                 setUserInfo({
                     username: result.username,
-                    first_name:result.first_name_th,
-                    last_name:result.last_name_th,
+                    first_name: result.first_name_th,
+                    last_name: result.last_name_th,
                     privilege: result.employee_privilege_id,
                 })
 
@@ -170,12 +170,14 @@ function UserChangeCompany() {
                             <GridContainer>
                                 <GridItem xs={12} sm={5} md={5}>
                                     <Label
+                                        key={1}
                                         title="Username"
                                         value={userInfo.username}
                                     />
                                 </GridItem>
                                 <GridItem xs={12} sm={7} md={7}>
                                     <Label
+                                        key={2}
                                         title="ชื่อ-นามสกุล"
                                         value={`${userInfo.first_name} ${userInfo.last_name}`}
                                     />
@@ -213,7 +215,7 @@ function UserChangeCompany() {
                                             </GridContainer>
                                             <br></br>
                                             <GridContainer>
-                                                <GridItem xs={12} sm={12} md={12} style={{display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                                                <GridItem xs={12} sm={12} md={12} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                                                     <Button color="info"
                                                         onClick={onShowModal}
                                                         endIcon={<Icon style={{ fontSize: "25px" }}>flip_camera_android</Icon>}

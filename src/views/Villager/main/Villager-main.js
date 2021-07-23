@@ -93,7 +93,7 @@ function VillagerMain() {
         const company_name = event.target.getAttribute("company_name")
         if (company_id) {
             dispatch(setVillagerSelectCompanySuccess({ company_id, company_name }))
-            history.push("/admin/villager-import");
+            history.push("/villager-import");
         }
     }
     //--------------Modal edit

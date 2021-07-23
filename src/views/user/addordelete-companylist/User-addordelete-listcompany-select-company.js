@@ -90,7 +90,7 @@ function UserAddOrDeleteListComapnySelectCompany() {
         const company_id = event.target.getAttribute("company_id")
         if (company_id) {
             dispatch(setSelectCompanySuccess({ company_id }));
-            history.push("/admin/user-addordelete-listcompany-list")
+            history.push("/user-addordelete-listcompany-list")
         }
     }
 

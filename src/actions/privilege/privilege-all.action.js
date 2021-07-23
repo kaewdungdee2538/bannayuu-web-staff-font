@@ -34,7 +34,6 @@ export const GetPrivilegeAllAction = (history,  authStore) => {
                     history.goBack();
                 });
             } else {
-                console.log(result)
                 if (result.result)
                     dispatch(setGetPrivilegeAllSuccess(result.result));
                 else

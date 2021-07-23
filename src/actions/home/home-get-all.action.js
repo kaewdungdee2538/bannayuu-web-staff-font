@@ -37,7 +37,6 @@ export const GetHomeAllAction = (history, credential, authStore) => {
                     history.goBack();
                 });
             } else {
-                console.log(result)
                 if (result.result)
                     dispatch(setGetHomeAllSuccess(result.result));
                 else

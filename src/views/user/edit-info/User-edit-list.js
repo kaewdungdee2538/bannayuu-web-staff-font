@@ -48,7 +48,6 @@ function UserEditList() {
     }, []);
     async function loadCompanyEditForm(textSearch) {
         const authStore = Store.loginReducer.result;
-        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
@@ -61,7 +60,7 @@ function UserEditList() {
                 dispatch(checkJWTTOKENAction(history, Store));
                 dispatch(GetCompanyListAllAction(history, valuesObj, authStore));
             } else {
-                history.push("/admin/user-edit-info-select");
+                history.push("/user-edit-info-select");
             }
 
         }
@@ -95,7 +94,7 @@ function UserEditList() {
         const employee_id = event.target.getAttribute("employee_id")
         if(employee_id){
             dispatch(setSelectUserSuccess({employee_id}))
-            history.push("/admin/user-edit-info")
+            history.push("/user-edit-info")
         }
     }
 

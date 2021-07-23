@@ -48,7 +48,6 @@ function UserAddOrDeleteListCompanyList() {
     }, []);
     async function loadAddOrDeleteCompanyForm(textSearch) {
         const authStore = Store.loginReducer.result;
-        console.log(authStore)
         if (!authStore) {
             history.push("/login");
         } else {
@@ -61,7 +60,7 @@ function UserAddOrDeleteListCompanyList() {
                 dispatch(checkJWTTOKENAction(history, Store));
                 dispatch(GetCompanyListAllAction(history, valuesObj, authStore));
             } else {
-                history.push("/admin/user-addordelete-listcompany-select");
+                history.push("/user-addordelete-listcompany-select");
             }
 
         }
@@ -95,7 +94,7 @@ function UserAddOrDeleteListCompanyList() {
         const employee_id = event.target.getAttribute("employee_id")
         if(employee_id){
             dispatch(setSelectUserSuccess({employee_id}))
-            history.push("/admin/user-addordelete-listcompany")
+            history.push("/user-addordelete-listcompany")
         }
     }
 

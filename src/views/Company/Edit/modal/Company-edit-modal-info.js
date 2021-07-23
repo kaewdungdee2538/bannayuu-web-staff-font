@@ -15,6 +15,7 @@ import CardIcon from "components/Card/CardIcon.js";
 import TextField from '@material-ui/core/TextField';
 import AvatarForm from "components/Avatar/Avatar-form"
 import Icon from '@material-ui/core/Icon';
+import Label from 'components/Label/Label'
 import DialogContent from '@material-ui/core/DialogContent';
 import { modalStyle } from 'utils/modalStyle.utils'
 import moment from "moment";
@@ -35,9 +36,11 @@ function CompanyEditModalInfo(props) {
         setSelectExceptDay,
         setDateStart,
         setDateEnd,
+        setLineConfig,
         dateStart,
         dateEnd,
         remark,
+        lineConfig,
         selectExceptDay,
     } = props;
     const classes = modalStyle();
@@ -157,7 +160,17 @@ function CompanyEditModalInfo(props) {
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                         {statusAvatarElem}
+                        <br></br>
                         <GridContainer>
+                            <GridItem xs={12} sm={12} md={5}>
+                                <Label
+                                    title="Company ID"
+                                    value={companyInfo.company_id}
+                                />
+                            </GridItem>
+                        </GridContainer>
+                        <GridContainer>
+
                             <GridItem xs={12} sm={12} md={5}>
                                 <CustomInput
                                     labelText="รหัสโครงการ"
@@ -281,8 +294,8 @@ function CompanyEditModalInfo(props) {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
                                 <Card>
-                                    <CardHeader color="info" stats icon>
-                                        <CardIcon color="info">
+                                    <CardHeader color="danger" stats icon>
+                                        <CardIcon color="danger">
                                             <Icon>admin_panel_settings</Icon>
                                         </CardIcon>
                                         <p className={classes.cardCategory}>Security Setup</p>
@@ -311,6 +324,40 @@ function CompanyEditModalInfo(props) {
                                 </Card>
                             </GridItem>
                         </GridContainer>
+                        <br></br>
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <Card>
+                                    <CardHeader color="info" stats icon>
+                                        <CardIcon color="info">
+                                            <Icon>app_settings_alt</Icon>
+                                        </CardIcon>
+                                        <p >Line Configuration</p>
+                                    </CardHeader>
+                                    <CardBody>
+                                        <GridContainer>
+                                            <GridItem xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Line configuration data"
+                                                    formControlProps={{
+                                                        fullWidth: true,
+                                                    }}
+                                                    inputProps={{
+                                                        maxLength: "1000",
+                                                        value: lineConfig,
+                                                        multiline: true,
+                                                        rows: 7,
+                                                        onChange: event => setLineConfig(event.target.value)
+                                                    }}
+                                                />
+                                            </GridItem>
+                                        </GridContainer>
+
+                                    </CardBody>
+                                </Card>
+                            </GridItem>
+                        </GridContainer>
+
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
                                 <CustomInput

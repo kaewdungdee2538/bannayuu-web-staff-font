@@ -47,7 +47,7 @@ function HomeImportData() {
             history.push("/login");
         } else {
             if (!Store.homeImportExcelReducer.result) {
-                history.push("/admin/home-main");
+                history.push("/home-main");
             } else {
                 dispatch(checkJWTTOKENAction(history, Store));
                 dispatch(setClearHomeAll());
@@ -82,18 +82,29 @@ function HomeImportData() {
         return true;
     }
     function uploadData() {
-        const homeImportReducer = Store.homeImportExcelReducer.result;
-        let itemFromExcel = [...excelItems];
-        itemFromExcel.shift();
-        const valueObj = {
-            company_id: homeImportReducer.company_id,
-            data: itemFromExcel
+        try{
+            const homeImportReducer = Store.homeImportExcelReducer.result;
+            const arrExcel = excelItems.map(items=>{
+                const newItems =  items.map(item=>{
+                     const ei = {value:item.value ? String(item.value) : null}
+                     return ei;
+                 })
+                 return newItems;
+             })
+             let itemFromExcel = [...arrExcel];
+            const valueObj = {
+                company_id: homeImportReducer.company_id,
+                data: itemFromExcel
+            }
+            dispatch(ImportExcelHomeAction(history, valueObj, Store.loginReducer.result));
+        }catch{
+            history.push("/page500");
         }
-        dispatch(ImportExcelHomeAction(history, valueObj, Store.loginReducer.result));
+        
     }
     //----------------On go to Home list 
     function onGotoHomeListClick() {
-        history.push('/admin/home-list')
+        history.push('/home-list')
     }
     //----------------------------------------------------
     return (

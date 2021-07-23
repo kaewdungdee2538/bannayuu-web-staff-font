@@ -68,9 +68,9 @@ function UserEditInfo() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-edit-info-select");
+            history.push("/user-edit-info-select");
         } else if (!userStore) {
-            history.push("/admin/user-edit-list");
+            history.push("/user-edit-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
             const valuesObj = {
@@ -80,7 +80,7 @@ function UserEditInfo() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(()=>{
-                    history.push("/admin/user-edit-list");
+                    history.push("/user-edit-list");
                 })
             } else {
                 const result = getData.result;

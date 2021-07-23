@@ -47,7 +47,7 @@ function VillagerImportData() {
             history.push("/login");
         } else {
             if (!Store.villagerImportExcelReducer.result) {
-                history.push("/admin/villager-main");
+                history.push("/villager-main");
             } else {
                 dispatch(setClearVillagerAll());
                 dispatch(checkJWTTOKENAction(history, Store));
@@ -56,7 +56,6 @@ function VillagerImportData() {
     }
     let formExcelElem = null;
     if (excelItems.length > 0) {
-
         formExcelElem = <div className={classesExcel.excelArea}><Spreadsheet data={excelItems} /></div>
 
     }
@@ -66,7 +65,7 @@ function VillagerImportData() {
         if (checkRow()) {
             if (checkColum()) {
                 uploadData();
-            } else swal("Warning!", `${MESSAGE_EXCELCOLUMN_NOTCOMPLETE} จำนวนคอลัมน์จะต้องมี 4-6 เท่านั้น`, "warning");
+            } else swal("Warning!", `${MESSAGE_EXCELCOLUMN_NOTCOMPLETE} จำนวนคอลัมน์จะต้องมี 5-6 เท่านั้น`, "warning");
         } else swal("Warning!", MESSAGE_EXCELROW_NOTFOUND, "warning");
     }
     function checkRow() {
@@ -76,24 +75,40 @@ function VillagerImportData() {
     }
     function checkColum() {
         const filterColumns = excelItems.find(item => {
-            return item.length > 6 || item.length < 4
+            return item.length > 6 || item.length < 5
         });
-        if (filterColumns) return false;
-        return true;
+        if (filterColumns) {
+            return false;
+        }
+        else{
+            return true;
+        }
+            
     }
     function uploadData() {
-        const villagerImportReducer = Store.villagerImportExcelReducer.result;
-        let itemFromExcel = [...excelItems];
-        itemFromExcel.shift();
-        const valueObj = {
-            company_id: villagerImportReducer.company_id,
-            data: itemFromExcel
+        try {
+            const villagerImportReducer = Store.villagerImportExcelReducer.result;
+            const arrExcel = excelItems.map(items => {
+                const newItems = items.map(item => {
+                    const ei = { value: item.value ? String(item.value) : null }
+                    return ei;
+                })
+                return newItems;
+            })
+            let itemFromExcel = [...arrExcel];
+            itemFromExcel.shift();
+            const valueObj = {
+                company_id: villagerImportReducer.company_id,
+                data: itemFromExcel
+            }
+            dispatch(ImportExcelVillagerAction(history, valueObj, Store.loginReducer.result));
+        } catch {
+            history.push("/page500");
         }
-        dispatch(ImportExcelVillagerAction(history, valueObj, Store.loginReducer.result));
     }
     //----------------On go to Home list 
     function onGotoVillagerListClick() {
-        history.push('/admin/villager-list')
+        history.push('/villager-list')
     }
     //----------------------------------------------------
     return (

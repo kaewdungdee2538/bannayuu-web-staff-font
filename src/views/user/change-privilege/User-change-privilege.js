@@ -63,9 +63,9 @@ function UserChangePrivilege() {
         if (!authStore) {
             history.push("/login");
         } else if (!companyStore) {
-            history.push("/admin/user-change-privilege-select");
+            history.push("/user-change-privilege-select");
         } else if (!userStore) {
-            history.push("/admin/user-change-privilege-list");
+            history.push("/user-change-privilege-list");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetPrivilegeAllAction(history, authStore))
@@ -76,7 +76,7 @@ function UserChangePrivilege() {
             const getData = await GetUserByID(dispatch, valuesObj, authStore)
             if (getData.error) {
                 swal("Warning!", getData.message, "warning").then(() => {
-                    history.push("/admin/user-change-privilege-list");
+                    history.push("/user-change-privilege-list");
                 })
             } else {
                 const result = getData.result;

@@ -27,23 +27,28 @@ import "assets/css/material-dashboard-react.css?v=1.10.0";
 //redux store
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk"
-import logger from "redux-logger"
+// import logger from "redux-logger"
 import { Provider } from "react-redux"
-import reducers from "./reducers"
+import reducers from "reducers"
 //redux devtool
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-const store = createStore(reducers, 
-  composeWithDevTools(applyMiddleware(thunk, logger)),
-  );
+// const store = createStore(reducers, 
+//   composeWithDevTools(applyMiddleware(thunk, logger)),
+//   );
+
+  const store = createStore(reducers, 
+    composeWithDevTools(applyMiddleware(thunk)),
+    );
+  
 const ReduxApp = (
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/page500" component={Page500} />
-        <Route path="/admin" component={Admin} />
-        <Redirect from="/" to="/admin/main" />
+        <Route path="/" component={Admin} />
+        <Redirect from="/" to="/main" />
       </Switch>
     </BrowserRouter>
   </Provider>

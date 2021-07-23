@@ -85,7 +85,7 @@ function UserAdd() {
         if (!authStore) {
             history.push("/login");
         } else if (!Store.companySelectedReducer.result) {
-            history.push("/admin/user-main");
+            history.push("/user-main");
         } else {
             dispatch(checkJWTTOKENAction(history, Store));
             dispatch(GetPrivilegeAllAction(history, authStore))

@@ -37,19 +37,19 @@ function UserMain() {
         }
     }
     function onCreateClick() {
-        history.push("/admin/user-add-select")
+        history.push("/user-add-select")
     }
     function onEditInformationClick() {
-        history.push("/admin/user-edit-info-select")
+        history.push("/user-edit-info-select")
     }
     function onChangePrivilegeClick() {
-        history.push("/admin/user-change-privilege-select")
+        history.push("/user-change-privilege-select")
     }
     function onChangeCompanySelect() {
-        history.push("/admin/user-change-company-select")
+        history.push("/user-change-company-select")
     }
     function onAddOrDeleteCompanyList() {
-        history.push("/admin/user-addordelete-listcompany-select")
+        history.push("/user-addordelete-listcompany-select")
     }
     //----------------------------------------------------
     return (

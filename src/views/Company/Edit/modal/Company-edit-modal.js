@@ -15,11 +15,10 @@ import { modalStyle } from 'utils/modalStyle.utils'
 import moment from "moment";
 import { EditCompanyAction } from 'actions/company/company-edit.action'
 import { DisableCompanyAction } from 'actions/company/company-disable.action'
-import {EnableCompanyAction} from 'actions/company/company-enable.action'
+import { EnableCompanyAction } from 'actions/company/company-enable.action'
 
 function CompanyEditModal(props) {
     const { showModal, setShowModal, valuesObj } = props
-    console.log(valuesObj)
     const scroll = 'paper';
     const dispatch = useDispatch();
     const history = useHistory();
@@ -43,7 +42,8 @@ function CompanyEditModal(props) {
         delete_date: "",
         calculate_enable: false,
         price_of_cardloss: "0",
-        except_time_split_from_day: false
+        except_time_split_from_day: false,
+        line_company_data :""
     })
     //----------Set default value
     const dStart = moment();
@@ -62,6 +62,7 @@ function CompanyEditModal(props) {
     const [dateEnd, setDateEnd] = useState(dEnd);
     const [image, setImage] = useState(null);
     const [remark, setRemark] = useState("")
+    const [lineConfig, setLineConfig] = useState("");
     const [selectExceptDay, setSelectExceptDay] = useState("true");
     //-----------------Form load
     useEffect(() => {
@@ -80,6 +81,7 @@ function CompanyEditModal(props) {
                 swal("Warning!", getData.message, "warning");
             } else {
                 const result = getData.result;
+                console.log(result)
                 setCompanyInfo(result)
                 setCheckCal(result.calculate_enable);
                 setCheckSecureEstampVisitor(result.booking_estamp_verify);
@@ -88,6 +90,7 @@ function CompanyEditModal(props) {
                 setDateStart(result.company_start_date ? result.company_start_date : dStart)
                 setDateEnd(result.company_expire_date ? result.company_expire_date : dEnd)
                 setSelectExceptDay(result.except_time_split_from_day.toString())
+                setLineConfig(JSON.stringify(result.line_company_data))
             }
         }
     }
@@ -107,7 +110,8 @@ function CompanyEditModal(props) {
             image,
             remark,
             booking_estamp_verify: checkSecureEstampVisitor,
-            visitor_estamp_verify: checkSecureEstampBooking
+            visitor_estamp_verify: checkSecureEstampBooking,
+            line_company_data: lineConfig
         }, Store.loginReducer.result))
     }
     //---------------On Disable 
@@ -119,7 +123,7 @@ function CompanyEditModal(props) {
         }, Store.loginReducer.result))
     }
     //---------------On Enable
-    function onEnableClick(){
+    function onEnableClick() {
         dispatch(EnableCompanyAction(history, {
             company_id: companyInfo.company_id.toString(),
             image,
@@ -142,14 +146,14 @@ function CompanyEditModal(props) {
             onClick={() => { setShowFormInfo(false); setShowFormDisable(true); setHeaderTextModal("ระงับการใช้งานโครงการ"); }}
         >
             ระงับการใช้งาน
-         </Button>
+        </Button>
         btnEditSaveElem = <Button onClick={onEditClick}
             color="primary"
             className={classes.btnSave}
             endIcon={<Icon>save</Icon>}
         >
             แก้ไขข้อมูล
-         </Button>
+        </Button>
     } else {
         btnEnableElem = <Button
             className={classes.btnEnable}
@@ -157,7 +161,7 @@ function CompanyEditModal(props) {
             onClick={() => { setShowFormInfo(false); setShowFormEnable(true); setHeaderTextModal("เปิดให้บริการโครงการใหม่อีกครั้ง"); }}
         >
             เปิดให้บริการใหม่
-     </Button>
+        </Button>
     }
     //----------------Show Form Info
     let formInfoElem = null;
@@ -185,6 +189,8 @@ function CompanyEditModal(props) {
             setDateEnd={setDateEnd}
             dateStart={dateStart}
             dateEnd={dateEnd}
+            setLineConfig={setLineConfig}
+            lineConfig={lineConfig}
         />
         formBottomElemInfo = <DialogActions>
             {btnEnableElem}
@@ -195,7 +201,7 @@ function CompanyEditModal(props) {
                 className={classes.btnCancel}
             >
                 ยกเลิก
-                </Button>
+            </Button>
         </DialogActions>
     }
     //--------------Show Form Disable
@@ -239,13 +245,13 @@ function CompanyEditModal(props) {
                 endIcon={<Icon>save</Icon>}
             >
                 เปิดให้บริการใหม่
-        </Button>
+            </Button>
             <Button onClick={onCloseModal}
                 color="primary"
                 className={classes.btnCancel}
             >
                 ยกเลิก
-        </Button>
+            </Button>
         </DialogActions>
     }
     //-------------------------------------

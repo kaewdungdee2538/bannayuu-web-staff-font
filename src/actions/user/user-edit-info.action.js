@@ -18,7 +18,7 @@ export const EditUserAction = (history, credential, authStore) => {
                 swal("Success", result.message, "success")
                     .then(() => {
                         dispatch(setSuccess());
-                        history.push('/admin/user-edit-list')
+                        history.push('/user-edit-list')
                     });
             }
     }

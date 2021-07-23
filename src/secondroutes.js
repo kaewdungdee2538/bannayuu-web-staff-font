@@ -40,75 +40,75 @@ const secondRoutes = [
   {
     path: "/home-import",
     component: HomeImportData,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/home-list",
     component: HomeList,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/villager-import",
     component: VillagerImportData,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/villager-list",
     component: VillagerList,
-    layout: "/admin",
+    layout: "",
   }, {
     path: "/user-add-select",
     component: UserAddSelectCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-add",
     component: UserAdd,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-edit-info-select",
     component: UserEditSelectCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-edit-list",
     component: UserEditList,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-edit-info",
     component: UserEditInfo,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-privilege-select",
     component: UserChangePrivilegeSelectCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-privilege-list",
     component: UserChangePrivilegeList,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-privilege",
     component: UserChangePrivilege,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-company-select",
     component: UserChangeComapnySelectCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-company-list",
     component: UserChangeCompanyList,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-change-company",
     component: UserChangeCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-addordelete-listcompany-select",
     component: UserAddOrDeleteListComapnySelectCompany,
-    layout: "/admin",
+    layout: "",
   },{
     path: "/user-addordelete-listcompany-list",
     component: UserAddOrDeleteListCompanyList,
-    layout: "/admin",
+    layout: "",
   }, {
     path: "/user-addordelete-listcompany",
     component: UserAddOrDeleteListCompany,
-    layout: "/admin",
+    layout: "",
   },
   
 ];
