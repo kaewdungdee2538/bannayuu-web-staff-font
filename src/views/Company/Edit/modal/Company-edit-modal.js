@@ -109,8 +109,8 @@ function CompanyEditModal(props) {
             except_time_split_from_day: selectExceptDay === "true" ? true : false,
             image,
             remark,
-            booking_estamp_verify: checkSecureEstampVisitor,
-            visitor_estamp_verify: checkSecureEstampBooking,
+            booking_estamp_verify: checkSecureEstampBooking,
+            visitor_estamp_verify: checkSecureEstampVisitor,
             line_company_data: lineConfig
         }, Store.loginReducer.result))
     }
