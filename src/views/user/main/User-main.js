@@ -51,6 +51,9 @@ function UserMain() {
     function onAddOrDeleteCompanyList() {
         history.push("/user-addordelete-listcompany-select")
     }
+    function onResetPassword() {
+        history.push("/user-reset-password-listcompany-select")
+    }
     //----------------------------------------------------
     return (
         <div>
@@ -113,6 +116,15 @@ function UserMain() {
                                         endIcon={<Icon style={{ fontSize: "30px" }}>add_business</Icon>}
                                     >
                                         เพิ่มโครงการในการดูแลให้กับผู้ใช้งาน
+                                    </Button>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={6}>
+                                    <Button
+                                        onClick={onResetPassword}
+                                        className={classesBtn.btnEdit}
+                                        endIcon={<Icon style={{ fontSize: "30px" }}>password</Icon>}
+                                    >
+                                        Reset Passowrd
                                     </Button>
                                 </GridItem>
                             </GridContainer>

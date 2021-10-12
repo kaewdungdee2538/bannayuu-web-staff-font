@@ -84,8 +84,8 @@ function CompanyEditModal(props) {
                 console.log(result)
                 setCompanyInfo(result)
                 setCheckCal(result.calculate_enable);
-                setCheckSecureEstampVisitor(result.booking_estamp_verify);
-                setCheckSecureEstampBooking(result.visitor_estamp_verify);
+                setCheckSecureEstampVisitor(result.visitor_estamp_verify);
+                setCheckSecureEstampBooking(result.booking_estamp_verify);
                 setPromotion(result.company_promotion)
                 setDateStart(result.company_start_date ? result.company_start_date : dStart)
                 setDateEnd(result.company_expire_date ? result.company_expire_date : dEnd)

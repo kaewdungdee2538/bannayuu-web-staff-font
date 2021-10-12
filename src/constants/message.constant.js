@@ -34,3 +34,5 @@ export const MESSAGE_REMARK_NOT_FOUND = 'กรุณากรอกเหตุ
 export const MESSAGE_REMARK_SPECIAL = 'เหตุผล ห้ามมีอักขระพิเศษ'
 export const MESSAGE_SELECT_NEW_COMPANY_DUPLICATE_OLD_COMPANY  = 'โครงการใหม่ต้องไม่ซ้ำกับโครงการเดิม'
 export const MESSAGE_NOT_SELECT_NEW_COMPANY = 'กรุณาเลือกโครงการใหม่'
+export const MESSAGE_EMPLOYEE_ID_NOTFOUND = 'ไม่พบรหัสพนักงานกรุณาเลือกพนักงานใหม่อีกครั้ง'
+export const MESSAGE_HOLDTIME_NOT_FOUND = 'ไม่พบเวลาที่จะต้อง Reset password กรุณาเลือกเวลา'

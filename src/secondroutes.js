@@ -31,6 +31,9 @@ import UserChangePrivilege from "views/user/change-privilege/User-change-privile
 import UserChangeComapnySelectCompany from "views/user/change-main-company/User-change-company-select-company"
 import UserChangeCompanyList from "views/user/change-main-company/User-change-company-list"
 import UserChangeCompany from "views/user/change-main-company/User-change-company"
+import UserResetPassowrdSelectCompany from "views/user/reset-password/User-reset-password-select-company"
+import UserResetPasswordList from "views/user/reset-password/User-reset-password-select-user"
+import UserResetPassword from "views/user/reset-password/User-reset-password"
 import UserAddOrDeleteListComapnySelectCompany from "views/user/addordelete-companylist/User-addordelete-listcompany-select-company"
 import UserAddOrDeleteListCompanyList from "views/user/addordelete-companylist/User-addordelete-listcompany-list"
 import UserAddOrDeleteListCompany from "views/user/addordelete-companylist/User-addordelete-listcompany"
@@ -96,6 +99,18 @@ const secondRoutes = [
   },{
     path: "/user-change-company",
     component: UserChangeCompany,
+    layout: "",
+  },{
+    path: "/user-reset-password-listcompany-select",
+    component: UserResetPassowrdSelectCompany,
+    layout: "",
+  },{
+    path: "/user-reset-password-list",
+    component: UserResetPasswordList,
+    layout: "",
+  },{
+    path: "/user-reset-password",
+    component: UserResetPassword,
     layout: "",
   },{
     path: "/user-addordelete-listcompany-select",
