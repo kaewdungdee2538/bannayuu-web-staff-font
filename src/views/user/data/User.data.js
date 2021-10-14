@@ -9,28 +9,22 @@ export const userHeaderTable = {
 
 export const itemSelectBoxsHoldTime = [
     {
-        value: "1 minute"
-        , text: "1 นาที"
+        value: "5 minutes"
+        , text: "5 นาที"
+    },{
+        value: "10 minutes"
+        , text: "10 นาที"
+    },{
+        value: "15 minutes"
+        , text: "15 นาที"
+    },{
+        value: "30 minutes"
+        , text: "30 นาที"
     },{
         value: "1 hours"
         , text: "1 ชั่วโมง"
     },{
-        value: "6 hours"
-        , text: "6 ชั่วโมง"
-    },{
-        value: "1 day"
-        , text: "1 วัน"
-    },{
-        value: "3 days"
-        , text: "3 วัน"
-    },{
-        value: "5 days"
-        , text: "7 วัน"
-    },{
-        value: "14 days"
-        , text: "14 วัน"
-    },{
-        value: "30 days"
-        , text: "30 วัน"
+        value: "2 hours"
+        , text: "2 ชั่วโมง"
     }
 ]
