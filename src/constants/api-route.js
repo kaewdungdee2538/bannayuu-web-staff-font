@@ -1,5 +1,6 @@
-// export const MAIN_URL = 'https://arm.bannayuu.com/bannayuu/admin/api/v1'
-export const MAIN_URL = 'http://172.25.10.227:4501/bannayuu/admin/api/v1'
+// export const MAIN_URL = 'https://admin.bannayuu.com/bannayuu/admin/api/v1'
+export const MAIN_URL = `${window.origin}/bannayuu/admin/api/v1`
+// export const MAIN_URL = 'http://127.0.0.1:4501/bannayuu/admin/api/v1'
 export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://cit.bannayuu.com/reset'
 export const LOGIN_API = '/authen/login'
 export const CREATE_COMPANY_API = '/company/add'

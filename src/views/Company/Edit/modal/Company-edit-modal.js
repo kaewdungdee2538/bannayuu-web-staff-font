@@ -43,6 +43,7 @@ function CompanyEditModal(props) {
         calculate_enable: false,
         price_of_cardloss: "0",
         except_time_split_from_day: false,
+        line_notification_broadcast:false,
         line_company_data :""
     })
     //----------Set default value
@@ -56,6 +57,8 @@ function CompanyEditModal(props) {
     const [checkCal, setCheckCal] = useState(false);
     const [checkSecureEstampVisitor, setCheckSecureEstampVisitor] = useState(false);
     const [checkSecureEstampBooking, setCheckSecureEstampBooking] = useState(false);
+    const [checkLineNotificationBoardcast, setCheckLineNotificationBoardcast] = useState(false);
+    
     const [promotion, setPromotion] = useState("");
     //----------State
     const [dateStart, setDateStart] = useState(dStart);
@@ -81,11 +84,11 @@ function CompanyEditModal(props) {
                 swal("Warning!", getData.message, "warning");
             } else {
                 const result = getData.result;
-                console.log(result)
                 setCompanyInfo(result)
                 setCheckCal(result.calculate_enable);
                 setCheckSecureEstampVisitor(result.visitor_estamp_verify);
                 setCheckSecureEstampBooking(result.booking_estamp_verify);
+                setCheckLineNotificationBoardcast(result.line_notification_broadcast)
                 setPromotion(result.company_promotion)
                 setDateStart(result.company_start_date ? result.company_start_date : dStart)
                 setDateEnd(result.company_expire_date ? result.company_expire_date : dEnd)
@@ -111,6 +114,7 @@ function CompanyEditModal(props) {
             remark,
             booking_estamp_verify: checkSecureEstampBooking,
             visitor_estamp_verify: checkSecureEstampVisitor,
+            line_notification_broadcast: checkLineNotificationBoardcast,
             line_company_data: lineConfig
         }, Store.loginReducer.result))
     }
@@ -176,6 +180,8 @@ function CompanyEditModal(props) {
             setCheckCal={setCheckCal}
             checkSecureEstampVisitor={checkSecureEstampVisitor}
             setCheckSecureEstampVisitor={setCheckSecureEstampVisitor}
+            checkLineNotificationBoardcast={checkLineNotificationBoardcast}
+            setCheckLineNotificationBoardcast={setCheckLineNotificationBoardcast}
             checkSecureEstampBooking={checkSecureEstampBooking}
             setCheckSecureEstampBooking={setCheckSecureEstampBooking}
             promotion={promotion}
