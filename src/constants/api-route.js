@@ -1,6 +1,6 @@
 
 // export const MAIN_URL = `${window.origin}/bannayuu/admin/api/v1` // production
-export const MAIN_URL = 'https://api_corporate_demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1' // demo
+export const MAIN_URL = 'https://api-corporate-demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1' // demo
 // export const MAIN_URL = 'http://127.0.0.1:4501/bannayuu/admin/api/v1' // test
 // export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://cit.bannayuu.com/reset' // production
 export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://web_management_demo.bannayuu.com/reset' // demo
