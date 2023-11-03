@@ -1,7 +1,7 @@
 
 // export const MAIN_URL = `${window.origin}/bannayuu/admin/api/v1` // production
-export const MAIN_URL = 'https://api-corporate-demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1' // demo
-// export const MAIN_URL = 'http://127.0.0.1:4501/bannayuu/admin/api/v1' // test
+// export const MAIN_URL = 'https://api-corporate-demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1' // demo
+export const MAIN_URL = 'http://127.0.0.1:4501/bannayuu/admin/api/v1' // test
 // export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://cit.bannayuu.com/reset' // production
 export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://web_management_demo.bannayuu.com/reset' // demo
 
@@ -28,3 +28,6 @@ export const RESET_PASSWORD_USER_API = '/user/reset-password'
 export const CHANGE_PRIVILEGE_USER_API = '/user/change-privilege'
 export const ADD_OR_DELETE_COMPANY_LIST_USER_API = '/user/addordelete-company-list'
 export const CHANGE_MAIN_COMPANY_USER_API = '/user/change-main-company'
+export const GET_SLOT_NOT_USE_API = '/slot/get/not-use'
+export const GET_SLOT_MAX_API = '/slot/get/max'
+export const ADD_SLOT_MANUAL_API = '/slot/add/manual'
