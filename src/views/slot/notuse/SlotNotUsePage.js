@@ -32,17 +32,15 @@ import {
 import { GetSlotMaxAction } from "actions/slot/get/slot-get-max.controller";
 import { headerSlotNotUseListTable } from "../data/data";
 import Button from "@material-ui/core/Button";
-import Icon from "@material-ui/core/Icon";
 import { modalStyle } from "utils/modalStyle.utils";
-import { SlotCompantStyle, styles } from "./SlotNotUseStyle";
+import { styles } from "./SlotNotUseStyle";
 // modal
 import { SlotAddModal } from "views/slot/add";
 
 const useStyles = makeStyles(styles);
-const useStyles2 = makeStyles(SlotCompantStyle);
+
 function SlotNotUsePage() {
   const classes = useStyles();
-  const classes2 = useStyles2();
   const classesModal = modalStyle();
   const Store = useSelector((store) => store);
   const dispatch = useDispatch();
@@ -96,15 +94,6 @@ function SlotNotUsePage() {
     fontSize: 14,
     fontWeight: 600,
   };
-  //--------------Show Modal Edit
-  function onShowModal(event) {
-    const company_id = event.target.getAttribute("company_id");
-    const company_name = event.target.getAttribute("company_name");
-    if (company_id) {
-      dispatch(setSlotSelectCompanySuccess({ company_id, company_name }));
-      history.push("/slot-not-use");
-    }
-  }
   //--------------Modal create
   function onAddModalClick() {
     setOpen(true);
@@ -185,34 +174,7 @@ function SlotNotUsePage() {
                       <TableRow
                         key={row.visitor_slot_id ? row.visitor_slot_id : "0"}
                       >
-                        <TableCell style={{ width: 80 }} align="left">
-                          <div className={classes2.tableRowBtn}>
-                            <Button
-                              color="primary"
-                              size="small"
-                              className={classesModal.btnSelect}
-                              endIcon={
-                                <Icon
-                                  visitor_slot_id={row.visitor_slot_id}
-                                  visitor_slot_number={row.visitor_slot_number}
-                                >
-                                  pin_end
-                                </Icon>
-                              }
-                              visitor_slot_id={row.visitor_slot_id}
-                              visitor_slot_number={row.visitor_slot_number}
-                              onClick={onShowModal}
-                            >
-                              <span
-                                visitor_slot_id={row.visitor_slot_id}
-                                visitor_slot_number={row.visitor_slot_number}
-                              >
-                                เลือก
-                              </span>
-                            </Button>
-                            <br></br>
-                          </div>
-                        </TableCell>
+                        
                         <TableCell style={{ width: 160 }} align="left">
                           {row.visitor_slot_number
                             ? row.visitor_slot_number

@@ -39,3 +39,4 @@ export const MESSAGE_HOLDTIME_NOT_FOUND = 'ไม่พบเวลาที่�
 export const MESSAGE_SLOT_COUNT_NOT_FOUND = 'กรุณาระบุจำนวนเลข Slot'
 export const MESSAGE_GUARDHOUSE_ID_NOT_FOUND = 'กรุณาระบุ Guardhouse ID'
 export const MESSAGE_GUARDHOUSE_CODE_NOT_FOUND = 'กรุณาระบุ Guardhouse Code'
+export const MESSAGE_HOME_LINE_ID_NOT_FOUND = 'กรุณาเลือกลูกค้า'
