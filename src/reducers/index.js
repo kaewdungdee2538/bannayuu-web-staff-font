@@ -12,6 +12,9 @@ import villagerGetAllReducer from 'reducers/villager/villager-get-all.reducer'
 import privilegeGetAllReducer from 'reducers/privilege/privilege-get-all.reducer'
 import userListGetAllReducer from 'reducers/user/user-list-get-all.reducer'
 import userSelectReducer from 'reducers/user/user-select.reducer'
+import slotMaxReducer from 'reducers/slot/slot-get-max.reducer'
+import slotNotUseReducer from 'reducers/slot/slot-get-not-use.reducer'
+
 export default combineReducers({
     loginReducer,
     logoutReducer,
@@ -25,5 +28,7 @@ export default combineReducers({
     villagerGetAllReducer,
     privilegeGetAllReducer,
     userListGetAllReducer,
-    userSelectReducer
+    userSelectReducer,
+    slotMaxReducer,
+    slotNotUseReducer
 })

@@ -29,7 +29,7 @@ export const GetSlotMaxAction = (history, credential, authStore) => {
         if (getSlotNotUseMiddleware(history,credential)) {
             dispatch(setFetching());
             const urlClient = `${MAIN_URL}${GET_SLOT_MAX_API}`
-            const valuesObj = { ...credential }
+            const valuesObj = { company_id : parseInt(credential.company_id) }
             const result = await httpClientGetMethodWithPost({ urlClient, valuesObj, authStore })
             if (result.error) {
                 dispatch(setFailed());

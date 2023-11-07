@@ -22,6 +22,7 @@ import Business from "@material-ui/icons/Business"
 import HomeWork from "@material-ui/icons/HomeWork"
 import Group from "@material-ui/icons/Group"
 import AccountBalance from "@material-ui/icons/SupervisedUserCircle"
+import StyleIcon from '@material-ui/icons/Style';
 // core components/views for Admin layout
 // import DashboardPage from "views/Dashboard/Dashboard.js";
 import CompanyAdd from "views/Company/Add/Company-add";
@@ -29,7 +30,7 @@ import CompanyEdit from "views/Company/Edit/Company-edit";
 import HomeMain from "views/Home/main/Home-main";
 import VillagerMain from "views/Villager/main/Villager-main"
 import UserMain from "views/user/main/User-main"
-import SlotMain from "views/slot/main/SlotMainPage"
+import SlotMainPageSelectCompanyPage from "views/slot/main/SlotMainPageSelectCompanyPage"
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -87,8 +88,8 @@ const dashboardRoutes = [
   {
     path: "/slot-main",
     name: "Slot",
-    icon: AccountBalance,
-    component: SlotMain,
+    icon: StyleIcon,
+    component: SlotMainPageSelectCompanyPage,
     layout: "",
   },
 ];

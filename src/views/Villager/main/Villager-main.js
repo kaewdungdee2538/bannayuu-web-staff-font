@@ -43,7 +43,7 @@ function VillagerMain() {
     const dispatch = useDispatch();
     const history = useHistory();
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const emptyRows = calEmptyRows(Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result : 0);
     //---------------------on load
     useEffect(() => {

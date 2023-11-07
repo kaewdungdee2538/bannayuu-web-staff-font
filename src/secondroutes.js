@@ -37,7 +37,7 @@ import UserResetPassword from "views/user/reset-password/User-reset-password"
 import UserAddOrDeleteListComapnySelectCompany from "views/user/addordelete-companylist/User-addordelete-listcompany-select-company"
 import UserAddOrDeleteListCompanyList from "views/user/addordelete-companylist/User-addordelete-listcompany-list"
 import UserAddOrDeleteListCompany from "views/user/addordelete-companylist/User-addordelete-listcompany"
-import SlotNotUsePageSlectCompanyPage from "views/slot/notuse/SlotNotUsePageSlectCompanyPage"
+import SlotNotUsePage from "views/slot/notuse/SlotNotUsePage"
 // core components/views for RTL layout
 
 const secondRoutes = [
@@ -126,12 +126,8 @@ const secondRoutes = [
     component: UserAddOrDeleteListCompany,
     layout: "",
   },{
-    path: "/slot-add",
-    component: SlotNotUsePageSlectCompanyPage,
-    layout: "",
-  },{
     path: "/slot-not-use",
-    component: UserAddOrDeleteListCompany,
+    component: SlotNotUsePage,
     layout: "",
   },
   

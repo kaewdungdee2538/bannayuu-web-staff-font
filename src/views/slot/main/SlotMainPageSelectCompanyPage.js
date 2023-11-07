@@ -30,11 +30,13 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
 import { modalStyle } from 'utils/modalStyle.utils'
-import { SlotCompantStyle, styles } from './SlotNotUsePageSlectCompanyStyle'
+import { SlotCompantStyle, styles } from './SlotMainPageSelectCompanyStyle'
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(SlotCompantStyle);
-function SlotNotUsePageSlectCompanyPage() {
+function SlotMainPageSelectCompanyPage() {
+
+   
     const classes = useStyles();
     const classes2 = useStyles2();
     const classesModal = modalStyle();
@@ -42,14 +44,14 @@ function SlotNotUsePageSlectCompanyPage() {
     const dispatch = useDispatch();
     const history = useHistory();
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const emptyRows = calEmptyRows(Store.companyGetAllReducer.result ? Store.companyGetAllReducer.result : 0);
     //---------------------on load
     useEffect(() => {
         loadHomeMainForm();
     }, []);
     async function loadHomeMainForm(textSearch) {
-        const authStore = Store.loginReducer.result;
+        const authStore = Store?.loginReducer?.result;
         if (!authStore) {
             history.push("/login");
         } else {
@@ -91,7 +93,8 @@ function SlotNotUsePageSlectCompanyPage() {
         const company_id = event.target.getAttribute("company_id")
         const company_name = event.target.getAttribute("company_name")
         if (company_id) {
-            dispatch(setSlotSelectCompanySuccess({ company_id, company_name }))
+            const valuesObj = { company_id, company_name }
+            dispatch(setSlotSelectCompanySuccess(valuesObj))
             history.push("/slot-not-use");
         }
     }
@@ -103,7 +106,7 @@ function SlotNotUsePageSlectCompanyPage() {
             <GridContainer>
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
-                        <CardHeader style={{ background: "linear-gradient(60deg, #3f51b5, #283593)" }} color="success" >
+                        <CardHeader style={{ background: "linear-gradient(60deg, rgb(181 63 63), rgb(147 40 40))" }} color="success" >
                             <h4 className={classes.cardTitleWhite}>เลือกโครงการเพิ่มตรวจสอบเลข Slot</h4>
                             <p className={classes.cardCategoryWhite}>Select company for check slot number</p>
                         </CardHeader>
@@ -207,7 +210,7 @@ function SlotNotUsePageSlectCompanyPage() {
 }
 
 
-const mapStateToProps = ({ mainReducer, companyGetAllReducer, villagerImportExcelReducer, villagerGetAllReducer }) => ({ mainReducer, companyGetAllReducer, villagerImportExcelReducer, villagerGetAllReducer })
+const mapStateToProps = ({ mainReducer, companyGetAllReducer }) => ({ mainReducer, companyGetAllReducer })
 
 const mapDispatchToProps = {
     setSlotSelectCompanySuccess,
@@ -216,4 +219,4 @@ const mapDispatchToProps = {
     setClearSlotAll,
     checkJWTTOKENAction
 }
-export default connect(mapStateToProps, mapDispatchToProps)(SlotNotUsePageSlectCompanyPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SlotMainPageSelectCompanyPage);

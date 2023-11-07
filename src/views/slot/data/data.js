@@ -22,12 +22,10 @@ export const headerTable = {
     status: "สถานะ"
 }
 
-export const headerVillagerListTable = {
-    villager_code:"รหัสลูกบ้าน",
-    home_address: "บ้านเลขที่",
-    full_name:"ชื่อ-นามสกุล",
-    tel_number:"เบอร์โทรศัพท์",
-    status: "สถานะ"
+export const headerSlotNotUseListTable = {
+    visitor_slot_number:"เลข Slot",
+    company_name: "โคงการ",
+    use_status: "ถูกใช้งาน"
 }
 
 

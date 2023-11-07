@@ -5,8 +5,8 @@ import {
     setFailed,
 } from 'actions/main/main.action'
 import {
-    HTTP_SLOT_SELECT_COMPANY_SUCCESS,
-    HTTP_SLOT_SELECT_COMPANY_CLEAR,
+    HTTP_SELECT_COMPANY_SUCCESS,
+    HTTP_SELECT_COMPANY_CLEAR,
     HTTP_GET_SLOT_NOTUSE_SUCCESS,
     HTTP_GET_SLOT_NOTUSE_CLEAR
 } from 'constants/constants.utils'
@@ -17,12 +17,12 @@ import { MAIN_URL, GET_SLOT_NOT_USE_API } from 'constants/api-route'
 import { httpClientGetMethodWithPost } from 'utils/httpClient.utils'
 
 export const setSlotSelectCompanySuccess = (payload) => ({
-    type: HTTP_SLOT_SELECT_COMPANY_SUCCESS,
+    type: HTTP_SELECT_COMPANY_SUCCESS,
     payload
 })
 
 export const setSlotClearSelectCompany = () => ({
-    type: HTTP_SLOT_SELECT_COMPANY_CLEAR
+    type: HTTP_SELECT_COMPANY_CLEAR
 })
 
 
@@ -40,7 +40,8 @@ export const GetSlotNotUseAllAction = (history, credential, authStore) => {
         if (getSlotNotUseMiddleware(history,credential)) {
             dispatch(setFetching());
             const urlClient = `${MAIN_URL}${GET_SLOT_NOT_USE_API}`
-            const valuesObj = { ...credential }
+            const valuesObj = { company_id : parseInt(credential.company_id) }
+
             const result = await httpClientGetMethodWithPost({ urlClient, valuesObj, authStore })
             if (result.error) {
                 dispatch(setFailed());

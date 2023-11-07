@@ -36,3 +36,6 @@ export const MESSAGE_SELECT_NEW_COMPANY_DUPLICATE_OLD_COMPANY  = 'โครง�
 export const MESSAGE_NOT_SELECT_NEW_COMPANY = 'กรุณาเลือกโครงการใหม่'
 export const MESSAGE_EMPLOYEE_ID_NOTFOUND = 'ไม่พบรหัสพนักงานกรุณาเลือกพนักงานใหม่อีกครั้ง'
 export const MESSAGE_HOLDTIME_NOT_FOUND = 'ไม่พบเวลาที่จะต้อง Reset password กรุณาเลือกเวลา'
+export const MESSAGE_SLOT_COUNT_NOT_FOUND = 'กรุณาระบุจำนวนเลข Slot'
+export const MESSAGE_GUARDHOUSE_ID_NOT_FOUND = 'กรุณาระบุ Guardhouse ID'
+export const MESSAGE_GUARDHOUSE_CODE_NOT_FOUND = 'กรุณาระบุ Guardhouse Code'
