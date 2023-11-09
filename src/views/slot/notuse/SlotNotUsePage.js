@@ -142,10 +142,7 @@ function SlotNotUsePage() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell
-                        style={{ width: 80, ...styleTableHeader }}
-                        align="left"
-                      ></TableCell>
+                      
                       <TableCell
                         style={{ width: 160, ...styleTableHeader }}
                         align="left"

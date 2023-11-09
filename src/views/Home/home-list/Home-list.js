@@ -31,6 +31,12 @@ import {
     // homeCompantStyle,
     styles
 } from '../main/Home-main-style'
+// excel
+import Excel from "../excel/ExportExcel";
+
+const header = {
+    reportName: "ข้อมูลบ้านเลขที่",
+  };
 
 const useStyles = makeStyles(styles);
 // const useStyles2 = makeStyles(homeCompantStyle);
@@ -107,7 +113,17 @@ function HomeList() {
                                 placeholder="บ้านเลขที่"
                                 searchFunc={e => onSearchClick(e)}
                             />
-                            <br></br>
+                              <br></br>
+              {Store.homeGetAllReducer.result &&
+                Array.isArray(Store.homeGetAllReducer.result) &&
+                Store.homeGetAllReducer.result.length > 0 && (
+                  <Excel
+                    headers={header}
+                    values={Store.homeGetAllReducer.result}
+                  />
+                )}
+              <br></br>
+
                             <TableContainer component={Paper}>
                                 <Table className={classes.table} aria-label="custom pagination table">
                                     <TableHead>

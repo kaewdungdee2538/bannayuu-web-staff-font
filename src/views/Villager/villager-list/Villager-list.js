@@ -33,6 +33,12 @@ import Icon from "@material-ui/core/Icon";
 import ButtonSearch from "components/Button/ButtonSearch";
 import { modalStyle } from "utils/modalStyle.utils";
 import { villagerCompantStyle, styles } from "../main/Villager-main-style";
+// excel
+import Excel from "../excel/ExportExcel";
+
+const header = {
+  reportName: "ข้อมูลลูกบ้านทั้งหมด",
+};
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(villagerCompantStyle);
@@ -43,8 +49,10 @@ function VillagerList() {
   const Store = useSelector((store) => store);
   const dispatch = useDispatch();
   const history = useHistory();
+  // start
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const emptyRows = calEmptyRows(
     Store.villagerGetAllReducer.result ? Store.villagerGetAllReducer.result : 0
   );
@@ -171,6 +179,15 @@ function VillagerList() {
                 placeholder="บ้านเลขที่"
                 searchFunc={(e) => onSearchClick(e)}
               />
+              <br></br>
+              {Store.villagerGetAllReducer.result &&
+                Array.isArray(Store.villagerGetAllReducer.result) &&
+                Store.villagerGetAllReducer.result.length > 0 && (
+                  <Excel
+                    headers={header}
+                    values={Store.villagerGetAllReducer.result}
+                  />
+                )}
               <br></br>
               <TableContainer component={Paper}>
                 <Table

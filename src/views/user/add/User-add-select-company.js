@@ -88,8 +88,10 @@ function UserAddSelectCompany() {
     //--------------Show Modal Edit
     function onShowModal(event) {
         const company_id = event.target.getAttribute("company_id")
-        dispatch(setSelectCompanySuccess({ company_id }));
-        history.push("/user-add")
+        if(company_id){
+            dispatch(setSelectCompanySuccess({ company_id }));
+            history.push("/user-add")
+        }
     }
 
     //----------------------------------------------------

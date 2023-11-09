@@ -17,6 +17,7 @@
     "chartist": "0.10.1",
     "classnames": "2.3.1",
     "date-fns": "^2.22.1",
+    "exceljs": "^4.4.0",
     "history": "5.0.0",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
