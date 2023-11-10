@@ -31,6 +31,12 @@ import Icon from '@material-ui/core/Icon';
 import ButtonSearch from 'components/Button/ButtonSearch'
 import { editCompantStyle } from './Company-edit-style'
 import CompanyEditModal from './modal/Company-edit-modal'
+// excel
+import Excel from "../excel/ExportExcel";
+
+const header = {
+    reportName: "ข้อมูลโครงการ",
+  };
 
 const useStyles = makeStyles(styles);
 const useStyles2 = makeStyles(editCompantStyle);
@@ -117,7 +123,18 @@ function CompanyEdit() {
                                 placeholder="รหัสโครงการ/ชื่อโครงการ"
                                 searchFunc={e => onSearchClick(e)}
                             />
-                            <br></br>
+
+                                                          <br></br>
+              {Store.companyGetAllReducer.result &&
+                Array.isArray(Store.companyGetAllReducer.result) &&
+                Store.companyGetAllReducer.result.length > 0 && (
+                  <Excel
+                    headers={header}
+                    values={Store.companyGetAllReducer.result}
+                  />
+                )}
+              <br></br>
+
                             <TableContainer component={Paper}>
                                 <Table className={classes.table} aria-label="custom pagination table">
                                     <TableHead>
