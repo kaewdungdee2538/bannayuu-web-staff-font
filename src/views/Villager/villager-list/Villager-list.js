@@ -222,6 +222,11 @@ function VillagerList() {
                         align="left"
                       >
                         {headerVillagerListTable.tel_number}
+                      </TableCell> <TableCell
+                        style={{ width: 160, ...styleTableHeader }}
+                        align="left"
+                      >
+                        {headerVillagerListTable.home_line_type}
                       </TableCell>
                       <TableCell
                         style={{ width: 120, ...styleTableHeader }}
@@ -286,6 +291,9 @@ function VillagerList() {
                         </TableCell>
                         <TableCell style={{ width: 160 }} align="left">
                           {row.tel_number ? row.tel_number : ""}
+                        </TableCell>
+                        <TableCell style={{ width: 160 }} align="left">
+                          {row.home_line_type ? row.home_line_type : ""}
                         </TableCell>
                         <TableCell style={{ width: 140 }} align="left">
                           {row.status && row.status == "NORMAL" ? (

@@ -28,6 +28,7 @@ export const headerVillagerListTable = {
     home_address: "บ้านเลขที่",
     full_name:"ชื่อ-นามสกุล",
     tel_number:"เบอร์โทรศัพท์",
+    home_line_type:'line notification',
     status: "สถานะ",
 }
 

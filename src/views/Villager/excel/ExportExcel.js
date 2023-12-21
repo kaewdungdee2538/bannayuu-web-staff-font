@@ -12,6 +12,7 @@ function generateDataSet(values) {
           item.last_name,
           item.tel_number.toString(),
           item.status,
+          item.home_line_type,
         ];
       })
     : [];
@@ -33,6 +34,7 @@ function generateDataSet(values) {
       { name: "นามสกุล", filterButton: true },
       { name: "เบอร์โทรศัพท์", filterButton: true },
       { name: "สถานะ", filterButton: true },
+      { name: "line notification", filterButton: true },
     ],
 
     rows: [...rowItems],
