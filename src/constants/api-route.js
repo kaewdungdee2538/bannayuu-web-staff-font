@@ -1,9 +1,12 @@
 
-export const MAIN_URL = `${window.origin}/bannayuu/admin/api/v1` // production
+// export const MAIN_URL = `${window.origin}/bannayuu/admin/api/v1` // production
 // export const MAIN_URL = 'https://api-corporate-demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1' // demo
 // export const MAIN_URL = 'http://127.0.0.1:4501/bannayuu/admin/api/v1' // test
-export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://cit.bannayuu.com/reset' // production
+export var MAIN_URL = `${process.env.REACT_APP_API_BASE_URL}` // env
+
+// export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://web_management_demo.bannayuu.com/reset' // production
 // export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = 'https://web_management_demo.bannayuu.com/reset' // demo
+export const WEB_USER_MANAGEMENT_RESET_PASSWORD_URL = `${process.env.REACT_APP_WEB_MANAGEMENT_PASSWORD_RESET_URL}` // env
 
 export const LOGIN_API = '/authen/login'
 export const CREATE_COMPANY_API = '/company/add'

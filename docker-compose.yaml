@@ -1,0 +1,12 @@
+version: '3'
+services:
+
+  web-bannayuu-staff:
+    image: web-bannayuu-staff:1.0.0
+    ports:
+      - 36600:80
+    restart: unless-stopped 
+    environment:
+      - TZ=Asia/Bangkok
+      - NODE_ENV=development
+      - REACT_APP_API_BASE_URL=https://api-corporate-demo.bannayuu.com/cit_staff/bannayuu/admin/api/v1

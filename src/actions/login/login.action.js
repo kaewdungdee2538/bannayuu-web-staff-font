@@ -31,6 +31,8 @@ export const loginAction = (history, credential) => {
         dispatch(setLoginFetching());
         dispatch(setFetching());
         const urlClient = `${MAIN_URL}${LOGIN_API}`
+        console.log(process.env.REACT_APP_WEB_MANAGEMENT_PASSWORD_RESET_URL)
+        console.log(process.env.REACT_APP_API_BASE_URL)
         const valuesObj = { ...credential }
         const result = await httpClientPOSTMethodNotAuth({ urlClient, valuesObj })
         if(result.error){
