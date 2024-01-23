@@ -28,3 +28,7 @@ package-lock.json
 commit.sh
 
 *.zip
+.zip
+
+*.tar
+.tar
